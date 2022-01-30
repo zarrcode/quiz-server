@@ -1,0 +1,1 @@
+The server for the zarrcode quiz app!
