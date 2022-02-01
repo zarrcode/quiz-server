@@ -1,4 +1,6 @@
 import axios from 'axios';
+import Questions from '../../interfaces/Questions';
+import Options from '../../interfaces/Options';
 
 async function getQuestions(
   amount: number,
@@ -11,7 +13,7 @@ async function getQuestions(
   console.log('Making a request to Open Trivia DB');
 
   try {
-    const options = {
+    const options: Options = {
       params: {
         amount: amount + 10,
         token,
@@ -23,9 +25,8 @@ async function getQuestions(
     };
 
     // initialising optional parameters
-    if (category) options.params[category] = category;
-    if (difficulty) options.params[difficulty] = difficulty;
-    if (type) options.params[type] = type;
+    if (category) options.params.category = category;
+    if (difficulty) options.params.difficulty = difficulty;
 
     const { data: { results } } = await axios.get(
       'https://opentdb.com/api.php',
@@ -35,7 +36,7 @@ async function getQuestions(
     const resultsArray: string[] = [];
 
     if (type && type === 'multiple') {
-      results.every((el) => {
+      results.every((el: Questions) => {
         if (el.question.includes('Which of')) return true;
         resultsArray.push(el.question);
         resultsArray.push(el.correct_answer);
@@ -44,7 +45,7 @@ async function getQuestions(
         return true;
       });
     } else {
-      results.every((el) => {
+      results.every((el: Questions) => {
         if (el.question.includes('Which of')) return true;
         resultsArray.push(el.question);
         resultsArray.push(el.correct_answer);
@@ -52,7 +53,8 @@ async function getQuestions(
         return true;
       });
     }
-
+    console.log(resultsArray);
+    console.log(resultsArray.length);
 
     return results;
   } catch (error) {
@@ -62,6 +64,6 @@ async function getQuestions(
   }
 }
 
-getQuestions(10, 'a1990082e37ccecb266d6dd65f3bf5ba82577539616c0d042971e2002a48a346', 9, 'easy', 'multiple');
+getQuestions(10, '6c153b1dfbfdd345b8f1398dafda289442073cd6243c709cf69574abe4f92e9c', 9, 'easy', 'multiple');
 
 export default { getQuestions };
