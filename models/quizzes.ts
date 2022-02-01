@@ -50,6 +50,7 @@ const generateQuiz = async (obj: any) => {
       'Active_Players', 1, //note we start with 1 as we are including the host here
       'Submitted_Answers', 0,
       'No_Questions', obj.questions,
+      'Current_Question', 1,
       'RenderedScreen', 'Lobby',
       ...formattedQuestions
     ]
@@ -96,9 +97,10 @@ const formatQuestions = function(array: string[] | undefined, type: string, amou
 
 
 
-const nextQuestion = async (gameID: string, question:string) => {
+const nextQuestion = async (gameID: string) => {
 
   //send next question and indicator for next question, once final scoreboard has been rendered and you're moving on
+  //take current question from db, current question
 
 
 }

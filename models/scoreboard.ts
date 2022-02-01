@@ -21,6 +21,9 @@ export const updateScoreboard = async (gameID:string, username:string) => {
 
 export const renderScoreboard = async (gameID:string) => {
 
+  //move currentquestion in db up by 1;
+  await client.hIncrBy(gameID, 'Current_Question', 1)
+
   const scoreboard = await client.hGetAll(gameID+'Scoreboard')
   console.log(scoreboard)
   return scoreboard;
