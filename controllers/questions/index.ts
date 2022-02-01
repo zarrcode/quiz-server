@@ -53,8 +53,6 @@ async function getQuestions(
       });
     }
 
-    console.log(resultsArray);
-    console.log(resultsArray.length);
 
     return results;
   } catch (error) {
