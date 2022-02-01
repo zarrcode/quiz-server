@@ -2,15 +2,16 @@ import axios from 'axios';
 import Questions from '../../interfaces/Questions';
 import Options from '../../interfaces/Options';
 
-async function getQuestions(
+export default async function getQuestions(
   amount: number,
   token: string,
   category?: number,
   difficulty?: string,
   type?: string,
-): Promise<string | undefined> {
+): Promise<string[] | undefined> {
   // eslint-disable-next-line no-console
   console.log('Making a request to Open Trivia DB');
+  console.log(amount, token, category, difficulty, type)
 
   try {
     const options: Options = {
@@ -32,6 +33,7 @@ async function getQuestions(
       'https://opentdb.com/api.php',
       options,
     );
+    // console.log('options',options)
 
     const resultsArray: string[] = [];
 
@@ -53,10 +55,10 @@ async function getQuestions(
         return true;
       });
     }
-    console.log(resultsArray);
-    console.log(resultsArray.length);
+    // console.log('resultsarray',resultsArray);
+    // console.log(resultsArray.length);
 
-    return results;
+    return resultsArray;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.log({ error, message: 'Could not retrieve questions' });
@@ -64,6 +66,6 @@ async function getQuestions(
   }
 }
 
-getQuestions(10, '6c153b1dfbfdd345b8f1398dafda289442073cd6243c709cf69574abe4f92e9c', 9, 'easy', 'multiple');
+getQuestions(10, '4e71392db0f4da3de01427dc87a465e64756964937c0af5ed68b2bcc5a466b80', 9, 'easy', 'multiple');
 
-export default { getQuestions };
+// export default { getQuestions };

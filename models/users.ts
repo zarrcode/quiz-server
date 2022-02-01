@@ -19,13 +19,11 @@ const createSession = async (username: string) => {
 }
 
 
-const getSession = async (userID: string) => {
-
-}
-
-const registerHost = async (username: string, userID: string, gameID: string) => {
+const registerHost = async (username: string, gameID: string) => {
+  const hostID = uuid()
   const values = {'username': username, 'gameID': gameID}
-  await client.hSet(userID, values)
+  await client.hSet(hostID, values)
+  return hostID
 }
 
 
@@ -34,13 +32,23 @@ const registerPlayer = async (quizCode: string, username: string) => {
   //check quiz exists
   const check = await client.hGetAll(quizCode)
   if (!check) console.log('Quiz does not exist');
-
   //create player hash with quiz, and unique userID
-
-
-
   //check if they are final user to join
+  //make sure you increase active game players
+}
 
+
+const addPlayerToGameList = async (gameID: string, userID: string) => {
+  const savedList = await client.lPush(gameID+'PlayerList', userID)
+  console.log(savedList)
+}
+
+
+const userDisconnects = async() => {
+
+}
+
+const userReconnects = async() => {
 
 }
 

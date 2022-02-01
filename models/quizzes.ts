@@ -1,70 +1,107 @@
 import client from '../db'
 import getQuestions from '../controllers/questions/index'
+import getToken from '../controllers/token/index'
 import { v4 as uuid } from 'uuid';
 import registerHost from './users'
 
 
-//fakequizObject
+// fakequizObject
 const newQuiz = {
   title:'reubys quizzola',
   difficulty: 'easy',
+  type: 'multiple',
   questions: 10,
   category: 'sports',
   username: 'reubiano'
 }
 
-const generateQuiz = async (obj) => {
 
+const quizCodeGenerator = function() {
   let quizCode = "";
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   for (var i = 0; i < 4; i++)
-    quizCode += letters.charAt(Math.floor(Math.random() * letters.length));
-
-  //retrieve questions from API function and incorporate into quiz object
-
-  //save quiz to db
-  await client.hSet(quizCode, obj)
-
-  //registerHost on system by calling register Host Function, that takes a userID, and quizID, and Username
-  const hostID = uuid();
-  registerHost(username, hostID, quizCode)
+  quizCode += letters.charAt(Math.floor(Math.random() * letters.length));
+  return quizCode;
+}
 
 
-  return quizCode
+const generateQuiz = async (obj: any) => {
 
+  const quizCode = quizCodeGenerator()
+  console.log(quizCode)
+
+  const token = await getToken()
+
+  if (token) {
+
+    const questions: string[] | undefined = await getQuestions(obj.questions, token, 9, obj.difficulty, obj.type)
+    const formattedQuestions = formatQuestions(questions, 'multiple', 10)
+
+    const hostID = await registerHost(obj.username, quizCode)
+    //need to make sure we add host to game list
+    //nned to make sure we add host to scoreboard
+    //need to make sure we create host user
+
+    const quizArr = [
+      'Title', obj.title,
+      'Host_Name', obj.username,
+      'Creating_Host', hostID,
+      'Assigned_Host', hostID,
+      'Active_Players', 1, //note we start with 1 as we are including the host here
+      'Submitted_Answers', 0,
+      'No_Questions', obj.questions,
+      'RenderedScreen', 'Lobby',
+      ...formattedQuestions
+    ]
+    console.log(quizArr)
+    await client.hSet(quizCode, quizArr);
+    return quizCode
+
+  }
 }
 
 
 
+const formatQuestions = function(array: string[] | undefined, type: string, amount: number) {
 
-const nextQuestion = async () => {
-
-  //send next question and indicator
+  const formatted = [];
+  if (type === 'multiple' && array) {
+    let question = 1
+    for (let i = 0; i < array.length; i+=5) {
+      formatted.push(`Question${question}[question]`);
+      formatted.push(array[i])
+      formatted.push(`Question${question}[answer]`);
+      formatted.push(array[i+1]);
+      formatted.push(`Question${question}[incorrectAnswer1]`);
+      formatted.push(array[i+2]);
+      formatted.push(`Question${question}[incorrectAnswer2]`);
+      formatted.push(array[i+3]);
+      formatted.push(`Question${question}[incorrectAnswer3]`);
+      formatted.push(array[i+4]);
+      question++;
+    }
+  }
+  else if (array) {
+    let question = 1
+    for (let i = 0; i < array.length; i+=5) {
+      formatted.push(`Question${question}[question]`);
+      formatted.push(array[i])
+      formatted.push(`Question${question}[answer]`);
+      formatted.push(array[i+1]);
+      question++;
+    }
+  }
+  return formatted
 }
 
 
-const submitAnswer = async () => {
-  //save answer, update player score, send updated answer no. list
-  //once last player has sumbitted, invoke generateAnswerList
+
+const nextQuestion = async (gameID: string, question:string) => {
+
+  //send next question and indicator for next question, once final scoreboard has been rendered and you're moving on
+
 
 }
-
-const changeAnswers = async () => {
-
-}
-
-
-const generateAnswerList = async () => {
-
-  //send answer list and indicator to change to answer screen
-}
-
-
-const generateScoreboard = async () => {
-  //once receives confirmation, send scoreboard
-
-}
-
 
 
 
