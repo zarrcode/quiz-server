@@ -5,11 +5,11 @@ export function createGame(options: GameCreatePayload) {
   return 'Hello';
 }
 
-export function checkGameExists(gameID: string) {
-  return true;
+export function gameExists(gameID: string) {
+  return gameID === 'Hello';
 }
 
 export default {
   createGame,
-  checkGameExists,
+  gameExists,
 };
