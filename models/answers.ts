@@ -10,6 +10,7 @@ const evaluateAnswer = async (gameID:string, username:string, questionNumber:num
   const quiz = await client.hGetAll(gameID);
   const correct_answer = quiz[`Question${questionNumber}[answer]`]
   correct_answer === answer ? updateScoreboard(gameID, username): null;
+console.log('running')
 
   addToAnswerList(gameID,username,answer,correct_answer);
 
@@ -38,5 +39,6 @@ const generateAnswerList = async (gameID:string) => {
 }
 
 
+evaluateAnswer('XYMG', 'Angus', 1, 'Steve Buscemi')
 evaluateAnswer('XYMG', 'Angus', 1, 'Steve Buscemi')
 
