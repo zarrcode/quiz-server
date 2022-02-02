@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { Server } from 'socket.io';
 import { type UserSocket } from './interfaces';
-import sessionStore from './sessionStoreTEMP';
+import sessionStore from './TEMP/sessionStoreTEMP';
 
 function authenticateUser(socket: UserSocket, next: any) {
   // handle reconnecting users
@@ -11,7 +11,7 @@ function authenticateUser(socket: UserSocket, next: any) {
     if (session) {
       socket.sessionID = sessionID;
       socket.username = session.username;
-      socket.lobbyID = session.lobbyID;
+      socket.gameID = session.gameID;
       return next();
     }
   }

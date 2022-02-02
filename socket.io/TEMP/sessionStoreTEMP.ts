@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 interface Session {
   username: string,
   sessionID: string,
-  lobbyID?: string,
+  gameID?: string,
 }
 
 const sessionStore: Session[] = [];
@@ -26,6 +26,13 @@ export function findSession(sessionID: string) {
 
 export function destroySession(sessionID: string) {
   sessionStore.filter((session) => session.sessionID !== sessionID);
+}
+
+export function addGameIDToSession(sessionID: string, gameID: string) {
+  sessionStore.forEach((session) => {
+    // eslint-disable-next-line no-param-reassign
+    if (session.sessionID === sessionID) session.gameID = gameID;
+  });
 }
 
 export default {

@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { GameCreatePayload } from './interfaces';
+import { GameCreatePayload } from '../interfaces';
 
 export function createGame(options: GameCreatePayload) {
-  return 'ABCD';
+  return 'Hello';
 }
 
 export function checkGameExists(gameID: string) {
