@@ -11,7 +11,7 @@ export default async function getQuestions(
 ): Promise<string[] | undefined> {
   // eslint-disable-next-line no-console
   console.log('Making a request to Open Trivia DB');
-  console.log(amount, token, category, difficulty, type)
+  console.log(amount, token, category, difficulty, type);
 
   try {
     const options: Options = {
