@@ -4,7 +4,7 @@ export default interface Options {
     amount: number,
     token: string,
     type: 'multiple',
-    category?: number,
+    category?: string,
     difficulty?: string,
   },
   headers: {
