@@ -24,7 +24,12 @@ export function findSession(sessionID: string) {
   return sessionStore.find((session) => session.sessionID === sessionID);
 }
 
+export function destroySession(sessionID: string) {
+  sessionStore.filter((session) => session.sessionID !== sessionID);
+}
+
 export default {
   createSession,
   findSession,
+  destroySession,
 };

@@ -16,15 +16,15 @@ function authenticateUser(socket: UserSocket, next: any) {
     }
   }
 
-  // if no session, user is either connecting for first time, or lobby has been closed
-  const { username } = socket.handshake.auth; // username only passed on first connection
-
-  // refuse users attempting to reconnect to closed lobbies
-  if (!username) return next(new Error('lobby closed'));
-
   // handle first time connection
-  socket.username = username;
-  return next();
+  const { username } = socket.handshake.auth; // username only passed on first connection
+  if (username) {
+    socket.username = username;
+    return next();
+  }
+
+  // refuse users with falsy usernames and users attempting to reconnect to closed lobbies
+  return next(new Error());
 }
 
 export function addMiddleware(io: Server) {
