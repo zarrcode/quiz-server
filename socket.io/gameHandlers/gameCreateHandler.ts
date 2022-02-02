@@ -1,8 +1,8 @@
 import { type Server } from 'socket.io';
-import { GameCreateOptions, type UserSocket } from '../interfaces';
+import { type GameCreateOptions, type UserSocket } from '../interfaces';
 import { createGame } from '../TEMP/stubsTEMP';
 import { addGameIDToSession, destroySession } from '../TEMP/sessionStoreTEMP';
-import { getGameRoomByID, getUsersInRoom } from '../helper';
+import { getGameRoomByID, getUsersInRoom } from './helperFunctions';
 
 async function gameCreateHandler(io: Server, socket: UserSocket, options: GameCreateOptions) {
   try {
