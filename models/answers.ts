@@ -1,5 +1,4 @@
 import client from '../db';
-// eslint-disable-next-line no-unused-vars
 import { addPlayerToScoreboard, updateScoreboard, renderScoreboard } from './scoreboard';
 
 const addToAnswerList = async (
