@@ -1,22 +1,22 @@
 import axios from 'axios';
 import Questions from '../../interfaces/Questions';
 import Options from '../../interfaces/Options';
+import categories from './categories';
 
-export default async function getQuestions(
+async function getCategory(
   amount: number,
   token: string,
-  category?: number,
+  category?: string,
   difficulty?: string,
   type?: string,
 ): Promise<string[] | undefined> {
   // eslint-disable-next-line no-console
   console.log('Making a request to Open Trivia DB');
-  console.log(amount, token, category, difficulty, type);
 
   try {
     const options: Options = {
       params: {
-        amount: amount + 10,
+        amount,
         token,
         type: 'multiple',
       },
@@ -25,17 +25,16 @@ export default async function getQuestions(
       },
     };
 
+    const resultsArray: string[] = [];
+
     // initialising optional parameters
-    if (category) options.params.category = category;
+    if (category && categories[category]) options.params.category = categories[category];
     if (difficulty) options.params.difficulty = difficulty;
 
     const { data: { results } } = await axios.get(
       'https://opentdb.com/api.php',
       options,
     );
-    // console.log('options',options)
-
-    const resultsArray: string[] = [];
 
     if (type && type === 'multiple') {
       results.every((el: Questions) => {
@@ -43,7 +42,6 @@ export default async function getQuestions(
         resultsArray.push(el.question);
         resultsArray.push(el.correct_answer);
         resultsArray.push(...el.incorrect_answers);
-        if (resultsArray.length === amount * 5) return false;
         return true;
       });
     } else {
@@ -51,13 +49,9 @@ export default async function getQuestions(
         if (el.question.includes('Which of')) return true;
         resultsArray.push(el.question);
         resultsArray.push(el.correct_answer);
-        if (resultsArray.length === amount * 2) return false;
         return true;
       });
     }
-    // console.log('resultsarray',resultsArray);
-    // console.log(resultsArray.length);
-
     return resultsArray;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -66,6 +60,44 @@ export default async function getQuestions(
   }
 }
 
-getQuestions(10, '4e71392db0f4da3de01427dc87a465e64756964937c0af5ed68b2bcc5a466b80', 9, 'easy', 'multiple');
+export default async function getQuestions(
+  amount: number,
+  token: string,
+  category: string[],
+  difficulty?: string,
+  type?: string,
+): Promise<string [] | undefined> {
+  try {
+    let categoryAmount;
+    if (category.length) categoryAmount = Math.floor(amount / category.length);
+    else {
+      const resultsArray = await getCategory(amount, token, undefined, difficulty, type);
+      return resultsArray;
+    }
+    const questionArray: string[] = [];
+    for (let i = 0; i < category.length; i += 1) {
+      while (categoryAmount > 0) {
+        // eslint-disable-next-line no-await-in-loop
+        const resultsArray = await getCategory(
+          categoryAmount,
+          token,
+          category[i],
+          difficulty,
+          type,
+        );
+        if (resultsArray) categoryAmount -= resultsArray.length;
+        questionArray.push(...resultsArray!);
+      }
+      categoryAmount = Math.floor(amount / category.length);
+    }
+    console.log(questionArray);
+    console.log(questionArray.length);
+    return questionArray;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log({ error, message: 'Could not retrieve questions' });
+    return undefined;
+  }
+}
 
-// export default { getQuestions };
+getQuestions(3, '7001d370f44e8e10960558866995e4ed21f12362baa5ff50425dcffd697e3d2b', ['Video Games', 'Politics', 'Sports'], 'easy', 'multiple');
