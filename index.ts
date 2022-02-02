@@ -1,10 +1,11 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { Server } from 'socket.io';
 import http from 'http';
+import { Server } from 'socket.io';
 import serverPort, { clientURL } from './environment';
 import router from './router';
-import configureSocketServer from './socket.io';
+import { addMiddleware } from './socket.io/middleware';
+import { addServerListeners } from './socket.io/serverListeners';
 
 const app = express();
 const corsConfig = { origin: 'http://localhost:3000', credentials: true };
@@ -22,7 +23,9 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: clientURL },
 });
-configureSocketServer(io);
+// configure socket server
+addMiddleware(io);
+addServerListeners(io);
 
 // eslint-disable-next-line no-console
 server.listen(serverPort, () => console.log(`Server running at http://localhost:${serverPort}`));
