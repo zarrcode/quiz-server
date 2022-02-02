@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { GameCreatePayload } from '../interfaces';
+import { GameCreateOptions } from '../interfaces';
 
-export function createGame(options: GameCreatePayload) {
+export function createGame(options: GameCreateOptions) {
   return 'Hello';
 }
 
