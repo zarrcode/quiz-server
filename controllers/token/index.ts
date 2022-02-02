@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-async function getToken(): Promise<string | undefined> {
+export default async function getToken(): Promise<string | undefined> {
   try {
     const options = {
       params: {
@@ -21,4 +21,4 @@ async function getToken(): Promise<string | undefined> {
   }
 }
 
-export default { getToken };
+// export default { getToken };
