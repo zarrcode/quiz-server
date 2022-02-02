@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import client from '../db';
 import getQuestions from '../controllers/questions/index';
 import getToken from '../controllers/token/index';
@@ -14,19 +13,18 @@ const newQuiz = {
   username: 'reubiano',
 };
 
-const quizCodeGenerator = function () {
+function quizCodeGenerator() {
   let quizCode = '';
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   for (let i = 0; i < 4; i += 1) {
     quizCode += letters.charAt(Math.floor(Math.random() * letters.length));
   }
   return quizCode;
-};
+}
 
-const formatQuestions = function (
+function formatQuestions(
   array: string[] | undefined,
   type: string,
-  amount: number
 ) {
   const formatted = [];
   if (type === 'multiple' && array) {
@@ -55,53 +53,70 @@ const formatQuestions = function (
     }
   }
   return formatted;
-};
+}
 
 const generateQuiz = async (obj: any) => {
-  const quizCode = quizCodeGenerator();
-  console.log(quizCode);
+  try {
+    const quizCode = quizCodeGenerator();
+    console.log('quizCode', quizCode);
 
-  const token = await getToken();
+    const token = await getToken();
 
-  if (token) {
-    const questions: string[] | undefined = await getQuestions(
-      obj.questions,
-      token,
-      9,
-      obj.difficulty,
-      obj.type,
-    );
-    const formattedQuestions = formatQuestions(questions, 'multiple', 10);
+    if (token) {
+      const questions: string[] | undefined = await getQuestions(
+        obj.questions,
+        token,
+        9,
+        obj.difficulty,
+        obj.type,
+      );
+      const formattedQuestions = formatQuestions(questions, 'multiple');
 
-    const hostID = await registerHost(obj.username, quizCode);
-    // need to make sure we add host to game list
-    // need to make sure we add host to scoreboard
-    // need to make sure we create host user
+      const hostID = await registerHost(obj.username, quizCode);
+      // need to make sure we add host to game list
+      // need to make sure we add host to scoreboard
+      // need to make sure we create host user
 
-    const quizArr = [
-      'Title', obj.title,
-      'Host_Name', obj.username,
-      'Creating_Host', hostID,
-      'Assigned_Host', hostID,
-      'Active_Players', 1, // note we start with 1 as we are including the host here
-      'Submitted_Answers', 0,
-      'No_Questions', obj.questions,
-      'Current_Question', 1,
-      'RenderedScreen', 'Lobby',
-      ...formattedQuestions,
-    ];
-    console.log(quizArr);
-    await client.hSet(quizCode, quizArr);
-    return quizCode;
-  } return undefined;
+      const quizArr = [
+        'Title', obj.title,
+        'Host_Name', obj.username,
+        'Creating_Host', hostID,
+        'Assigned_Host', hostID,
+        'Active_Players', 1, // note we start with 1 as we are including the host here
+        'Submitted_Answers', 0,
+        'No_Questions', obj.questions,
+        'Current_Question', 1,
+        'RenderedScreen', 'Lobby',
+        ...formattedQuestions,
+      ];
+      console.log('quizArray', quizArr);
+      await client.hSet(quizCode, quizArr);
+      return quizCode;
+    } return undefined;
+  } catch (error) {
+    return error;
+  }
 };
 
-const nextQuestion = async (gameID: string) => {
-
-  // send next question and indicator for next question,
-  // once final scoreboard has been rendered and you're moving on
-  // take current question from db, current question
+const checkQuizExists = async (gameID: string) => {
+  try {
+    const quizExists = await client.hGetAll(gameID);
+    return quizExists && true;
+  } catch (err) {
+    return err;
+  }
 };
+
+const getQuestion = async (gameID: string) => {
+  const currentQuestionNumber = await client.hGet(gameID, 'Current_Question');
+  const currentQuestion = await client.hGet(gameID, `Question${currentQuestionNumber}[question]`);
+  return currentQuestion;
+  // console.log('current question', currentquestion);
+  // console.log('ZAMYquiz', quiz)
+};
+
+console.log(checkQuizExists('ZAMY'));
+// checkQuizExists('DOGY');
 
 // 'Title'
 // Ross's Quiz
