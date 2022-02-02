@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { Server } from 'socket.io';
 import { type UserSocket } from './interfaces';
 import sessionStore from './sessionStoreTEMP';
