@@ -3,10 +3,10 @@ import { type Socket } from 'socket.io';
 export interface UserSocket extends Socket {
   sessionID?: string,
   username?: string,
-  lobbyID?: string,
+  gameID?: string,
 }
 
-export interface GameCreatePayload {
+export interface GameCreateOptions {
   username: string,
   title: string,
   difficulty: string,

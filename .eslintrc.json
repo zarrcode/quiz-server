@@ -13,8 +13,15 @@
       },
       "plugins": [
         "@typescript-eslint"
+<<<<<<< HEAD
       ],
       "rules": {
+=======
+    ],
+    "rules": {
+      "no-shadow": "off",
+      "no-console": "off",
+>>>>>>> 950f99d4d5e2083a4fb640f79d96b7ea5b5abc55
         "import/extensions": [
           "error",
           "ignorePackages",

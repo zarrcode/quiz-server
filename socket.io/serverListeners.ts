@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
 import { Server } from 'socket.io';
 import { type UserSocket } from './interfaces';
 import { addSocketListeners } from './socketListeners';
-import sessionStore from './sessionStoreTEMP';
+import sessionStore from './TEMP/sessionStoreTEMP';
 
 export function addServerListeners(io: Server) {
   io.on('connection', (socket: UserSocket) => {
@@ -16,7 +15,7 @@ export function addServerListeners(io: Server) {
       socket.emit('session', sessionID);
     }
 
-    addSocketListeners(socket);
+    addSocketListeners(io, socket);
   });
 }
 
