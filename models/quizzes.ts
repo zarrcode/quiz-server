@@ -118,14 +118,14 @@ const getQuiz = async (gameID: string) => {
   }
 };
 
-const getCurrentQuestion = async (gameID: string) => {
+export const getCurrentQuestion = async (gameID: string) => {
   const quiz = await client.hGetAll(gameID);
   const format = quiz.Format;
   const currentQuestionNumber = quiz.Current_Question;
   const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
   const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
   if (currentQuestion && format !== 'multiple') {
-    console.log(currentQuestion, correctAnswer)
+    console.log(currentQuestion, correctAnswer);
 
     return { currentQuestion, correctAnswer };
   }
@@ -138,11 +138,8 @@ const getCurrentQuestion = async (gameID: string) => {
   };
 };
 
-<<<<<<< HEAD
 console.log(quizExists('GIBM'));
 console.log(getCurrentQuestion('GIBM'));
-=======
 console.log(getCurrentQuestion('KIUW', 'multiple'));
 
 export default { getCurrentQuestion };
->>>>>>> 13c4461dc60a25748d2b0562acab250101315e5a

@@ -18,13 +18,13 @@ const addToAnswerList = async (
   }
 };
 
-const getAnswersAndBoolean = async (gameID:string) => {
+export const getAnswersAndBoolean = async (gameID:string) => {
   const answerList = await client.hGetAll(`${gameID}AnswerList`);
   console.log('answer list', answerList);
   return answerList;
 };
 
-const evaluateAnswer = async (
+export const evaluateAnswer = async (
   gameID: string,
   username: string,
   answer: string,
