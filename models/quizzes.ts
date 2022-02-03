@@ -125,3 +125,5 @@ const getCurrentQuestion = async (gameID: string, format: string) => {
 };
 
 console.log(getCurrentQuestion('KIUW', 'multiple'));
+
+export default { getCurrentQuestion };

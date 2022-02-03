@@ -38,3 +38,5 @@ const evaluateAnswer = async (
 const similarity1 = stringSimilarity.compareTwoStrings('princess leia', 'leia');
 
 console.log(similarity1);
+
+export default evaluateAnswer;
