@@ -7,7 +7,7 @@ import registerHost from './users';
 const newQuiz = {
   title: 'reubys quizzola',
   difficulty: 'easy',
-  type: 'multiple',
+  type: '',
   questions: 10,
   category: ['Sports'],
   username: 'reubiano',
@@ -82,6 +82,7 @@ const generateQuiz = async (obj: any) => {
         'Host_Name', obj.username,
         'Creating_Host', hostID,
         'Assigned_Host', hostID,
+        'Format', obj.type,
         'Active_Players', 1, // note we start with 1 as we are including the host here
         'Submitted_Answers', 0,
         'No_Questions', obj.questions,
@@ -108,12 +109,13 @@ const checkQuizExists = async (gameID: string) => {
   }
 };
 
-const getCurrentQuestion = async (gameID: string, format: string) => {
+const getCurrentQuestion = async (gameID: string) => {
   const quiz = await client.hGetAll(gameID);
+  const format = quiz.Format;
   const currentQuestionNumber = quiz.Current_Question;
   const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
   const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
-  if (currentQuestion && format === 'open') {
+  if (currentQuestion && format !== 'multiple') {
     return { currentQuestion, correctAnswer };
   }
   const incorrectAnswer1 = quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
@@ -124,4 +126,5 @@ const getCurrentQuestion = async (gameID: string, format: string) => {
   };
 };
 
-console.log(getCurrentQuestion('KIUW', 'multiple'));
+console.log(getCurrentQuestion('LHPV', 'multiple'));
+// console.log(generateQuiz(newQuiz));
