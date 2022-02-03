@@ -138,5 +138,11 @@ const getCurrentQuestion = async (gameID: string) => {
   };
 };
 
+<<<<<<< HEAD
 console.log(quizExists('GIBM'));
 console.log(getCurrentQuestion('GIBM'));
+=======
+console.log(getCurrentQuestion('KIUW', 'multiple'));
+
+export default { getCurrentQuestion };
+>>>>>>> 13c4461dc60a25748d2b0562acab250101315e5a
