@@ -16,7 +16,7 @@ export function addSocketListeners(io: Server, socket: UserSocket) {
 
     // update other users in room
     const { sessionID } = socket;
-    socket.emit('users_leave', sessionID);
+    socket.broadcast.emit('users_leave', sessionID);
   });
 }
 
