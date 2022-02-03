@@ -1,6 +1,6 @@
 import { type Server } from 'socket.io';
 import { type UserSocket } from '../interfaces';
-import { gameExists } from '../TEMP/gameStoreTEMP';
+import { getGame, gameExists } from '../TEMP/gameStoreTEMP';
 import { addGameIDToSession, destroySession } from '../TEMP/sessionStoreTEMP';
 import { getGameRoomByID, getUsersInRoom } from './helperFunctions';
 
@@ -21,6 +21,10 @@ function gameJoinHandler(io: Server, socket: UserSocket, gameID: string) {
     const room = getGameRoomByID(io, gameID);
     const users = getUsersInRoom(io, room!);
     socket.emit('users', users);
+
+    // send game name
+    const game = getGame(gameID);
+    socket.emit('game_joined', game!.title);
 
     // alert other users
     const user = { username: socket.username };
