@@ -7,10 +7,9 @@ import { getGameRoomByID, getUsersInRoom } from './helperFunctions';
 async function gameCreateHandler(io: Server, socket: UserSocket, options: GameCreateOptions) {
   try {
     // create game
-    const gameID = await createGame(options); // TODO: replace with call to Angus function
-
-    // send game ID
-    socket.emit('game_created', gameID);
+    const hostID = socket.sessionID;
+    // TODO: replace with call to Angus function
+    const { gameID } = await createGame(hostID!, options);
 
     // join user to game
     addGameIDToSession(socket.sessionID!, gameID); // TODO: replace with call to Angus function
@@ -20,6 +19,9 @@ async function gameCreateHandler(io: Server, socket: UserSocket, options: GameCr
     const room = getGameRoomByID(io, gameID);
     const users = getUsersInRoom(io, room!);
     socket.emit('users', users);
+
+    // send game ID
+    socket.emit('game_created', gameID);
   } catch (err) {
     console.error(err);
 
