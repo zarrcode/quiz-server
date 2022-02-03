@@ -23,4 +23,12 @@ export const renderScoreboard = async (gameID:string) => {
   return scoreboard;
 };
 
+const tester = async (gameID:string) => {
+  const scoreboard = await client.hGetAll(`${gameID}Scoreboard`)
+  console.log(scoreboard);
+};
+tester('GIBM')
+
 export default { addPlayerToScoreboard, updateScoreboard, renderScoreboard };
+
+// renderScoreboard('GIBM')

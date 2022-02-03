@@ -43,7 +43,7 @@ function formatQuestions(
     }
   } else if (array) {
     let question = 1;
-    for (let i = 0; i < array.length; i += 5) {
+    for (let i = 0; i < array.length; i += 2) {
       formatted.push(`Question${question}[question]`);
       formatted.push(array[i]);
       formatted.push(`Question${question}[answer]`);
@@ -58,6 +58,7 @@ const generateQuiz = async (obj: any, hostID: string) => {
   try {
     const gameID = quizCodeGenerator();
     console.log('quizCode', gameID);
+    console.log('format',obj.Format)
 
     const token = await getToken();
 
@@ -69,7 +70,9 @@ const generateQuiz = async (obj: any, hostID: string) => {
         obj.difficulty,
         obj.type,
       );
-      const formattedQuestions = formatQuestions(questions, 'multiple');
+      console.log(questions);
+      const formattedQuestions = formatQuestions(questions, obj.Format);
+      console.log('formattedQuestions', formattedQuestions)
 
       // const hostID = await registerHost(obj.username, quizCode);
       // need to make sure we add host to game list
@@ -89,7 +92,6 @@ const generateQuiz = async (obj: any, hostID: string) => {
         'RenderedScreen', 'Lobby',
         ...formattedQuestions,
       ];
-      console.log('quizArray', quizArr);
       await client.hSet(gameID, quizArr);
       return gameID;
     } return undefined;
@@ -125,7 +127,7 @@ const getCurrentQuestion = async (gameID: string) => {
   const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
   const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
   if (currentQuestion && format !== 'multiple') {
-    console.log(currentQuestion, correctAnswer)
+    console.log(currentQuestion, correctAnswer);
 
     return { currentQuestion, correctAnswer };
   }
@@ -137,12 +139,5 @@ const getCurrentQuestion = async (gameID: string) => {
     currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3,
   };
 };
-
-<<<<<<< HEAD
-console.log(quizExists('GIBM'));
-console.log(getCurrentQuestion('GIBM'));
-=======
-console.log(getCurrentQuestion('KIUW', 'multiple'));
-
-export default { getCurrentQuestion };
->>>>>>> 13c4461dc60a25748d2b0562acab250101315e5a
+// getCurrentQuestion('GIBM');
+generateQuiz(newQuiz, 'flamingoman');

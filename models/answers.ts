@@ -45,6 +45,10 @@ const evaluateAnswer = async (
   }
 };
 
+evaluateAnswer('GIBM', 'oscar', '21st August');
+evaluateAnswer('GIBM', 'angus', '29st September');
+evaluateAnswer('GIBM', 'David', 'August 21');
+
 // const similarity1 = stringSimilarity.compareTwoStrings('princess leia', 'leia');
 
 // console.log(similarity1);
