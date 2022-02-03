@@ -39,4 +39,5 @@ export default {
   createSession,
   findSession,
   destroySession,
+  addGameIDToSession,
 };
