@@ -9,6 +9,8 @@ export function addServerListeners(io: Server) {
     addSocketListeners(io, socket);
 
     socket.emit('session', socket.sessionID);
+
+    // TODO: add logic to rejoin users to ongoing games
   });
 }
 

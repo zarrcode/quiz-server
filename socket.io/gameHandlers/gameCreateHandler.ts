@@ -1,6 +1,6 @@
 import { type Server } from 'socket.io';
 import { type GameCreateOptions, type UserSocket } from '../interfaces';
-import { createGame } from '../TEMP/stubsTEMP';
+import { createGame } from '../TEMP/gameStoreTEMP';
 import { addGameIDToSession, destroySession } from '../TEMP/sessionStoreTEMP';
 import { getGameRoomByID, getUsersInRoom } from './helperFunctions';
 

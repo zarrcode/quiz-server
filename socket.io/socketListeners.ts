@@ -9,11 +9,7 @@ export function addSocketListeners(io: Server, socket: UserSocket) {
 
   socket.on('game_create', (options) => gameCreateHandler(io, socket, options));
   socket.on('game_join', (gameID) => gameJoinHandler(io, socket, gameID));
-
-  socket.on('game_start', () => {
-    // TODO: get question from model
-    // TODO: send question
-  });
+  socket.on('game_next', () => { }); // TODO: write handler
 
   socket.on('disconnect', () => {
     console.log(`${socket.username} disconnected`);
