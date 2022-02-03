@@ -11,6 +11,8 @@ export function addServerListeners(io: Server) {
     socket.emit('session', socket.sessionID);
 
     // TODO: add logic to rejoin users to ongoing games
+    // give them access to latest game state
+    // give them all users
   });
 }
 
