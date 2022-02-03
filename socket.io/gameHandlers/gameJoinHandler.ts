@@ -27,7 +27,10 @@ function gameJoinHandler(io: Server, socket: UserSocket, gameID: string) {
       socket.emit('game_joined', game!.title);
 
       // alert other users
-      const user = { username: socket.username };
+      const user = {
+        sessionID: socket.sessionID,
+        username: socket.username,
+      };
       socket.to(gameID).emit('users_join', user);
     }
   } catch (err) {

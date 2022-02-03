@@ -13,7 +13,10 @@ export function getUsersInRoom(io: Server, room: Set<string>) {
     const socket = <UserSocket>io.sockets.sockets.get(socketID);
     sockets.push(socket);
   });
-  const users = sockets.map((socket) => ({ username: socket.username }));
+  const users = sockets.map((socket) => ({
+    sessionID: socket.sessionID,
+    username: socket.username,
+  }));
   return users;
 }
 

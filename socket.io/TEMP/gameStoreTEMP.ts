@@ -27,7 +27,6 @@ export function getGame(gameID: string) {
 }
 
 export function gameExists(gameID: string) {
-  console.log('hello');
   const game = getGame(gameID);
   return !!game;
 }

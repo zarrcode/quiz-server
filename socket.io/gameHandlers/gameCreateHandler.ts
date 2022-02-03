@@ -18,6 +18,7 @@ async function gameCreateHandler(io: Server, socket: UserSocket, options: GameCr
     // send all users in room
     const room = getGameRoomByID(io, gameID);
     const users = getUsersInRoom(io, room!);
+    console.log(users);
     socket.emit('users', users);
 
     // send game ID

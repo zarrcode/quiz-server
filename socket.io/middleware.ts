@@ -6,7 +6,7 @@ import sessionStore from './TEMP/sessionStoreTEMP';
 function authenticateUser(socket: UserSocket, next: any) {
   // handle reconnecting users
   const { sessionID } = socket.handshake.auth;
-  if (sessionID) {
+  if (sessionID) { // game ongoing
     const session = sessionStore.findSession(sessionID);
     if (session) {
       socket.sessionID = sessionID;
@@ -18,7 +18,6 @@ function authenticateUser(socket: UserSocket, next: any) {
 
   // handle manual connection
   const hasUsername = Object.prototype.hasOwnProperty.call(socket.handshake.auth, 'username');
-  console.log(hasUsername);
   if (hasUsername) {
     // create new session
     const { username } = socket.handshake.auth; // username only passed on first connection
