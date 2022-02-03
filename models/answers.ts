@@ -10,7 +10,6 @@ const addToAnswerList = async (
   correctAnswer: string,
   similarity: number,
 ) => {
-  await client.hSet(`${gameID}AnswerList`, 'Correct_Answer', correctAnswer);
   if (similarity > 0.656) {
     await client.hSet(`${gameID}AnswerList`, username, `${answer}:true`);
   } else {
@@ -20,8 +19,14 @@ const addToAnswerList = async (
 
 const getAnswersAndBoolean = async (gameID:string) => {
   const answerList = await client.hGetAll(`${gameID}AnswerList`);
-  console.log('answer list', answerList);
-  return answerList;
+  if (answerList) {
+    const arr: { [x: string]: string; }[] = [];
+    Object.keys(answerList).forEach((el) => {
+      arr.push({ username: el, answer: answerList[el].split(':')[0], result: answerList[el].split(':')[1] });
+    });
+    console.log('answer list', arr);
+    return arr;
+  }
 };
 
 const evaluateAnswer = async (
@@ -45,9 +50,10 @@ const evaluateAnswer = async (
   }
 };
 
-evaluateAnswer('GIBM', 'oscar', '21st August');
-evaluateAnswer('GIBM', 'angus', '29st September');
-evaluateAnswer('GIBM', 'David', 'August 21');
+// evaluateAnswer('GIBM', 'oscar', '21st August');
+// evaluateAnswer('GIBM', 'angus', '29st September');
+// evaluateAnswer('GIBM', 'David', 'August 21');
+getAnswersAndBoolean('GIBM');
 
 // const similarity1 = stringSimilarity.compareTwoStrings('princess leia', 'leia');
 
