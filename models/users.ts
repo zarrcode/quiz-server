@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid, v4 } from 'uuid';
 import client from '../db';
 // import getQuestions from '../controllers/questions/index'
 
@@ -15,6 +15,25 @@ const createSession = async (username: string) => {
   console.log(result);
   return result;
 };
+
+const addToSession = async (gameID: string, userID: string) => {
+  try {
+    const set = await client.hSet(userID, 'gameID', gameID);
+    return set;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
+// eslint-disable-next-line consistent-return
+// const destroySession = async (userID: string) => {
+//   try {
+//     await client.del(userID);
+//   } catch (err) {
+//     throw err;
+//   }
+// };
 
 const registerHost = async (username: string, gameID: string) => {
   const hostID = uuid();
