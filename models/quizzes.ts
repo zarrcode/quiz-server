@@ -1,7 +1,6 @@
 import client from '../db';
 import getQuestions from '../controllers/questions/index';
 import getToken from '../controllers/token/index';
-import registerHost from './users';
 
 // fakequizObject
 const newQuiz = {
@@ -55,10 +54,10 @@ function formatQuestions(
   return formatted;
 }
 
-const generateQuiz = async (obj: any) => {
+const generateQuiz = async (obj: any, hostID: string) => {
   try {
-    const quizCode = quizCodeGenerator();
-    console.log('quizCode', quizCode);
+    const gameID = quizCodeGenerator();
+    console.log('quizCode', gameID);
 
     const token = await getToken();
 
@@ -72,7 +71,7 @@ const generateQuiz = async (obj: any) => {
       );
       const formattedQuestions = formatQuestions(questions, 'multiple');
 
-      const hostID = await registerHost(obj.username, quizCode);
+      // const hostID = await registerHost(obj.username, quizCode);
       // need to make sure we add host to game list
       // need to make sure we add host to scoreboard
       // need to make sure we create host user
@@ -83,7 +82,7 @@ const generateQuiz = async (obj: any) => {
         'Creating_Host', hostID,
         'Assigned_Host', hostID,
         'Format', obj.type,
-        'Active_Players', 1, // note we start with 1 as we are including the host here
+        'Active_Players', 0,
         'Submitted_Answers', 0,
         'No_Questions', obj.questions,
         'Current_Question', 1,
@@ -91,19 +90,29 @@ const generateQuiz = async (obj: any) => {
         ...formattedQuestions,
       ];
       console.log('quizArray', quizArr);
-      await client.hSet(quizCode, quizArr);
-      return quizCode;
+      await client.hSet(gameID, quizArr);
+      return gameID;
     } return undefined;
   } catch (error) {
     return error;
   }
 };
 
-const checkQuizExists = async (gameID: string) => {
+const quizExists = async (gameID: string) => {
   try {
     const quizExists = await client.hGetAll(gameID);
     console.log(quizExists);
-    return quizExists && true;
+    if (quizExists) return true;
+    return false;
+  } catch (err) {
+    return err;
+  }
+};
+
+const getQuiz = async (gameID: string) => {
+  try {
+    const quiz = await client.hGetAll(gameID);
+    return quiz;
   } catch (err) {
     return err;
   }
@@ -116,15 +125,18 @@ const getCurrentQuestion = async (gameID: string) => {
   const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
   const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
   if (currentQuestion && format !== 'multiple') {
+    console.log(currentQuestion, correctAnswer)
+
     return { currentQuestion, correctAnswer };
   }
   const incorrectAnswer1 = quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
   const incorrectAnswer2 = quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
   const incorrectAnswer3 = quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+  console.log(currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3)
   return {
     currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3,
   };
 };
 
-console.log(getCurrentQuestion('LHPV', 'multiple'));
-// console.log(generateQuiz(newQuiz));
+console.log(quizExists('GIBM'));
+console.log(getCurrentQuestion('GIBM'));
