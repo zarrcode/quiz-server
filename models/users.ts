@@ -1,4 +1,4 @@
-import { v4 as uuid, v4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import client from '../db';
 // import getQuestions from '../controllers/questions/index'
 
@@ -26,15 +26,6 @@ const addToSession = async (gameID: string, userID: string) => {
   }
 };
 
-// eslint-disable-next-line consistent-return
-// const destroySession = async (userID: string) => {
-//   try {
-//     await client.del(userID);
-//   } catch (err) {
-//     throw err;
-//   }
-// };
-
 const registerHost = async (username: string, gameID: string) => {
   const hostID = uuid();
   const values = { username, gameID };
@@ -54,14 +45,6 @@ const registerPlayer = async (quizCode: string, username: string) => {
 const addPlayerToGameList = async (gameID: string, userID: string) => {
   const savedList = await client.lPush(`${gameID}PlayerList`, userID);
   console.log(savedList);
-};
-
-const userDisconnects = async () => {
-
-};
-
-const userReconnects = async () => {
-
 };
 
 export default registerHost;

@@ -90,8 +90,8 @@ export default async function getQuestions(
       }
       categoryAmount = Math.floor(amount / category.length);
     }
-    console.log(questionArray);
-    console.log(questionArray.length);
+    // console.log(questionArray);
+    // console.log(questionArray.length);
     return questionArray;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -99,5 +99,3 @@ export default async function getQuestions(
     return undefined;
   }
 }
-
-getQuestions(3, '7001d370f44e8e10960558866995e4ed21f12362baa5ff50425dcffd697e3d2b', ['Video Games', 'Politics', 'Sports'], 'easy', 'multiple');

@@ -9,7 +9,7 @@ const newQuiz = {
   difficulty: 'easy',
   type: 'multiple',
   questions: 10,
-  category: 'sports',
+  category: ['Sports'],
   username: 'reubiano',
 };
 
@@ -66,7 +66,7 @@ const generateQuiz = async (obj: any) => {
       const questions: string[] | undefined = await getQuestions(
         obj.questions,
         token,
-        9,
+        obj.category,
         obj.difficulty,
         obj.type,
       );
@@ -108,18 +108,20 @@ const checkQuizExists = async (gameID: string) => {
   }
 };
 
-const getQuestion = async (gameID: string) => {
-  const currentQuestionNumber = await client.hGet(gameID, 'Current_Question');
-  const currentQuestion = await client.hGet(gameID, `Question${currentQuestionNumber}[question]`)
-  // const currentQuestion = await client.hGet(gameID, `Question${2}[question]`);
-  console.log('current question', currentQuestion);
-  if (currentQuestion) {
-    // const re = /hi/gi;
-    const formattedQuestion = currentQuestion.replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
-    console.log(formattedQuestion);
-    return formattedQuestion;
+const getCurrentQuestion = async (gameID: string, format: string) => {
+  const quiz = await client.hGetAll(gameID);
+  const currentQuestionNumber = quiz.Current_Question;
+  const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+  const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+  if (currentQuestion && format === 'open') {
+    return { currentQuestion, correctAnswer };
   }
+  const incorrectAnswer1 = quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+  const incorrectAnswer2 = quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+  const incorrectAnswer3 = quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+  return {
+    currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3,
+  };
 };
 
-console.log(getQuestion('WIFM'));
-// console.log(generateQuiz(newQuiz));
+console.log(getCurrentQuestion('KIUW', 'multiple'));
