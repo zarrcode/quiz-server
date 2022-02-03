@@ -1,6 +1,8 @@
 import client from '../db';
 import { updateScoreboard } from './scoreboard';
 
+const stringSimilarity = require('string-similarity');
+
 const addToAnswerList = async (
   gameID: string,
   username: string,
@@ -9,12 +11,10 @@ const addToAnswerList = async (
 ) => {
   await client.hSet(`${gameID}AnswerList`, 'Correct_Answer', correctAnswer);
   const answerList = await client.hSet(`${gameID}AnswerList`, username, answer);
-  console.log('answerlist function', answerList);
   return answerList;
 };
 
 const generateAnswerList = async (gameID:string) => {
-  console.log('Hitting generate answer list. Need to actually tell front end to render');
   const answerList = await client.hGetAll(`${gameID}AnswerList`);
   return answerList;
 };
@@ -26,12 +26,17 @@ const evaluateAnswer = async (
 ) => {
   // get quiz and check answer
   const quiz = await client.hGetAll(gameID);
-  const currentQuestionNumber = await client.hGet(gameID, 'Current_Question');
-  const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`];
-  if (correctAnswer === answer) updateScoreboard(gameID, username);
+  const currentQuestionNumber = quiz.Current_Question;
+  const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+  const similarity = stringSimilarity.compareTwoStrings(correctAnswer, answer);
+  if (similarity > 0.656) updateScoreboard(gameID, username);
   addToAnswerList(gameID, username, answer, correctAnswer);
   const current = await client.hIncrBy(gameID, 'Submitted_Answers', 1);
   if (current >= Number(quiz.Active_Players)) generateAnswerList(gameID);
 };
+
+
+const similarity = stringSimilarity.compareTwoStrings('Davidoff', 'Davidoff Smith');
+console.log(similarity)
 
 // evaluateAnswer('XYMG', 'Angus', 1, 'Steve Buscemi');

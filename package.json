@@ -38,6 +38,7 @@
     "express": "^4.17.2",
     "redis": "^4.0.3",
     "socket.io": "^4.4.1",
+    "string-similarity": "^4.0.4",
     "uuid": "^8.3.2"
   },
   "config": {

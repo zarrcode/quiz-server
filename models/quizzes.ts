@@ -101,6 +101,7 @@ const generateQuiz = async (obj: any) => {
 const checkQuizExists = async (gameID: string) => {
   try {
     const quizExists = await client.hGetAll(gameID);
+    console.log(quizExists);
     return quizExists && true;
   } catch (err) {
     return err;
@@ -109,36 +110,16 @@ const checkQuizExists = async (gameID: string) => {
 
 const getQuestion = async (gameID: string) => {
   const currentQuestionNumber = await client.hGet(gameID, 'Current_Question');
-  const currentQuestion = await client.hGet(gameID, `Question${currentQuestionNumber}[question]`);
-  return currentQuestion;
-  // console.log('current question', currentquestion);
-  // console.log('ZAMYquiz', quiz)
+  const currentQuestion = await client.hGet(gameID, `Question${currentQuestionNumber}[question]`)
+  // const currentQuestion = await client.hGet(gameID, `Question${2}[question]`);
+  console.log('current question', currentQuestion);
+  if (currentQuestion) {
+    // const re = /hi/gi;
+    const formattedQuestion = currentQuestion.replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+    console.log(formattedQuestion);
+    return formattedQuestion;
+  }
 };
 
-console.log(checkQuizExists('ZAMY'));
-// checkQuizExists('DOGY');
-
-// 'Title'
-// Ross's Quiz
-// 'Creating Host'
-// a78176
-// 'Assigned Host'
-// 682s4
-// 'Active Players'
-// 6
-// 'Submitted Answers'
-// 6
-// 'NoQuestions'
-// 10
-// 'Question1[question]'
-// Who won the Superbowl?
-// 'Question1[answer]'
-// New England Patriots
-// 'Question2[question]'
-// ...
-// 'Question2[answer]'
-// ... etc.
-// 'CurrentQuestion'
-// 3
-// 'RenderedScreen'
-// Leaderboard
+console.log(getQuestion('WIFM'));
+// console.log(generateQuiz(newQuiz));
