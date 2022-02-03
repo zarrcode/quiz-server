@@ -90,8 +90,19 @@ export default async function getQuestions(
       }
       categoryAmount = Math.floor(amount / category.length);
     }
-    // console.log(questionArray);
-    // console.log(questionArray.length);
+    let amountModifier;
+    if (type && type === 'multiple') amountModifier = 5;
+    else amountModifier = 2;
+    while (questionArray.length < amount * amountModifier) {
+      for (let i = 0; i < category.length; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        const resultsArray = await getCategory(1, token, category[i], difficulty, type);
+        if (resultsArray && resultsArray.length) {
+          questionArray.push(...resultsArray);
+          if (questionArray.length === amount * amountModifier) break;
+        }
+      }
+    }
     return questionArray;
   } catch (error) {
     // eslint-disable-next-line no-console

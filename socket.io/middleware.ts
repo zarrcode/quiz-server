@@ -19,6 +19,9 @@ function authenticateUser(socket: UserSocket, next: any) {
   // handle first time connection
   const { username } = socket.handshake.auth; // username only passed on first connection
   if (username) {
+    // create new session
+    const sessionID = sessionStore.createSession(username);
+    socket.sessionID = sessionID;
     socket.username = username;
     return next();
   }

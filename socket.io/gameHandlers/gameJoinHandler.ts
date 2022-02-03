@@ -1,8 +1,8 @@
 import { type Server } from 'socket.io';
 import { type UserSocket } from '../interfaces';
-import { getGameRoomByID, getUsersInRoom } from '../helper';
+import { gameExists } from '../TEMP/gameStoreTEMP';
 import { addGameIDToSession, destroySession } from '../TEMP/sessionStoreTEMP';
-import { gameExists } from '../TEMP/stubsTEMP';
+import { getGameRoomByID, getUsersInRoom } from './helperFunctions';
 
 function gameJoinHandler(io: Server, socket: UserSocket, gameID: string) {
   try {
