@@ -90,8 +90,19 @@ export default async function getQuestions(
       }
       categoryAmount = Math.floor(amount / category.length);
     }
-    console.log(questionArray);
-    console.log(questionArray.length);
+    let amountModifier;
+    if (type && type === 'multiple') amountModifier = 5;
+    else amountModifier = 2;
+    while (questionArray.length < amount * amountModifier) {
+      for (let i = 0; i < category.length; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        const resultsArray = await getCategory(1, token, category[i], difficulty, type);
+        if (resultsArray && resultsArray.length) {
+          questionArray.push(...resultsArray);
+          if (questionArray.length === amount * amountModifier) break;
+        }
+      }
+    }
     return questionArray;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -99,5 +110,3 @@ export default async function getQuestions(
     return undefined;
   }
 }
-
-getQuestions(3, '7001d370f44e8e10960558866995e4ed21f12362baa5ff50425dcffd697e3d2b', ['Video Games', 'Politics', 'Sports'], 'easy', 'multiple');
