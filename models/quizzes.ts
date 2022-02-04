@@ -121,23 +121,29 @@ const getQuiz = async (gameID: string) => {
 };
 
 const getCurrentQuestion = async (gameID: string) => {
-  const quiz = await client.hGetAll(gameID);
-  const format = quiz.Format;
-  const currentQuestionNumber = quiz.Current_Question;
-  const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
-  const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
-  if (currentQuestion && format !== 'multiple') {
-    console.log(currentQuestion, correctAnswer);
+  try {
+    const quiz = await client.hGetAll(gameID);
+    const format = quiz.Format;
+    const currentQuestionNumber = quiz.Current_Question;
+    const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+    const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+    if (currentQuestion && format !== 'multiple') {
+      console.log(currentQuestion, correctAnswer);
 
-    return { currentQuestion, correctAnswer };
+      return { currentQuestion, correctAnswer };
+    }
+    const incorrectAnswer1 = quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+    const incorrectAnswer2 = quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+    const incorrectAnswer3 = quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+    // eslint-disable-next-line max-len
+    console.log(currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3)
+    return {
+      currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3,
+    };
+  } catch (error) {
+    console.log(error);
+    return error;
   }
-  const incorrectAnswer1 = quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
-  const incorrectAnswer2 = quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
-  const incorrectAnswer3 = quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
-  console.log(currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3)
-  return {
-    currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3,
-  };
 };
 // getCurrentQuestion('GIBM');
-generateQuiz(newQuiz, 'flamingoman');
+console.log(getCurrentQuestion('GIBM'));
