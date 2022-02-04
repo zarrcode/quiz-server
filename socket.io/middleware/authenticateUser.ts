@@ -1,9 +1,7 @@
-/* eslint-disable no-param-reassign */
-import { Server } from 'socket.io';
-import { type UserSocket } from './interfaces';
-import { findSession, createSession } from '../models/users';
+import { type UserSocket } from '../interfaces';
+import { findSession, createSession } from '../../models/users';
 
-async function authenticateUser(socket: UserSocket, next: any) {
+export default async function authenticateUser(socket: UserSocket, next: any) {
   // handle reconnecting users
   const { sessionID } = socket.handshake.auth;
   if (sessionID) { // game ongoing
@@ -35,9 +33,3 @@ async function authenticateUser(socket: UserSocket, next: any) {
   // refuse users with deleted sessions
   return next(new Error('session deleted'));
 }
-
-export function addMiddleware(io: Server) {
-  io.use(authenticateUser);
-}
-
-export default { addMiddleware };

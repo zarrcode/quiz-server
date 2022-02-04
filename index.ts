@@ -1,11 +1,9 @@
 import express, { Request, Response } from 'express';
 import http from 'http';
 import cors from 'cors';
-import { Server } from 'socket.io';
-import serverPort, { clientURL } from './environment';
+import serverPort from './environment';
 import router from './router';
-import { addMiddleware } from './socket.io/middleware';
-import { connectionHandler } from './socket.io/connectionHandler';
+import initSocketIO from './socket.io';
 
 const app = express();
 const corsConfig = { origin: 'http://localhost:3000', credentials: true };
@@ -18,16 +16,10 @@ app
     res.status(404).send('404 Page not found');
   });
 
-// add socket server
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: clientURL },
-});
-// configure socket server
-addMiddleware(io);
-io.on('connection', (socket) => connectionHandler(io, socket));
 
-// eslint-disable-next-line no-console
+initSocketIO(server);
+
 server.listen(serverPort, () => {
   console.log(`Server running at http://localhost:${serverPort}`);
 });
