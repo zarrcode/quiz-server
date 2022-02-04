@@ -48,8 +48,8 @@ export const addGameIDToSession = async (userID: string, gameID: string) => {
   try {
     await client.hSet(userID, 'gameID', gameID);
     const user = await client.hGetAll(userID);
-    console.log('user', user)
-    addPlayerToGameList(gameID, user.username);
+    console.log('user', user);
+    addPlayerToGameList(gameID, userID);
     addPlayerToScoreboard(gameID, user.username);
     await client.hIncrBy(gameID, 'Active_Players', 1);
     return user;
@@ -63,7 +63,6 @@ export default {
   createSession, findSession, destroySession, addGameIDToSession, addPlayerToGameList,
 };
 
-// console.log(createSession('david'));
 // console.log(findSession('c53b0bd4-0401-4112-953c-386bbe8033b5'));
 // console.log(addGameIDToSession('f75f03cf-7d01-4443-b945-c4f30864a932', 'GIBM'));
 // console.log(findSession('c53b0bd4-0401-4112-953c-386bbe8033b5'));

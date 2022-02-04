@@ -146,7 +146,19 @@ export const getCurrentQuestion = async (gameID: string) => {
   }
 };
 
-// console.log(quizExists('GIBM'));
-// console.log(getCurrentQuestion('GIBM'));
+export const destroyQuiz = async (gameID: string) => {
+  try {
+    const users = await client.lRange(`${gameID}PlayerList`, 0, -1);
+    if (users) await client.del(users);
+    await client.del(`${gameID}Scoreboard`);
+    await client.del(`${gameID}AnswerList`);
+    await client.del(`${gameID}PlayerList`);
+    await client.del(gameID);
+    console.log('Game Destroyed');
+    return undefined;
+  } catch (error) {
+    return error;
+  }
+};
 
 export default { getCurrentQuestion };
