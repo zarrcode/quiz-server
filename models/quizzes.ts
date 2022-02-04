@@ -58,7 +58,7 @@ export const generateQuiz = async (obj: any, hostID: string) => {
   try {
     const gameID = quizCodeGenerator();
     console.log('quizCode', gameID);
-    console.log('format',obj.Format)
+    console.log('format', obj.Format);
 
     const token = await getToken();
 
@@ -146,7 +146,7 @@ export const getCurrentQuestion = async (gameID: string) => {
   }
 };
 
-console.log(quizExists('GIBM'));
-console.log(getCurrentQuestion('GIBM'));
+// console.log(quizExists('GIBM'));
+// console.log(getCurrentQuestion('GIBM'));
 
 export default { getCurrentQuestion };
