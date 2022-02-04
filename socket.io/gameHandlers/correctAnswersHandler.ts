@@ -14,7 +14,7 @@ export default async function correctAnswersHandler(
   } catch (err) {
     console.error(err);
     // emit custom 'error'
-    const reason = 'failed to submit answer';
+    const reason = 'failed to submit correct answer';
     socket.emit('answer_error', reason);
   }
 }
