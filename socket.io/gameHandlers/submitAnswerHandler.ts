@@ -1,7 +1,7 @@
 import { type UserSocket } from '../interfaces';
 import { evaluateAnswer, getAnswersAndBoolean } from '../../models/answers';
 
-export default async function getQuestionHandler(
+export default async function submitAnswerHandler(
   socket: UserSocket,
   gameID: string,
   answer: string,
