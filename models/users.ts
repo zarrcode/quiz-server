@@ -8,10 +8,8 @@ export const createSession = async (username: string) => {
     const userID = uuid();
     const values = { username };
     await client.hSet(userID, values);
-    console.log(userID);
     return userID;
   } catch (err) {
-    console.log(err);
     return err;
   }
 };
@@ -23,7 +21,6 @@ export const findSession = async (userID: string) => {
       return session;
     }
   } catch (err) {
-    console.log(err);
     return undefined;
   }
 };
@@ -31,17 +28,15 @@ export const findSession = async (userID: string) => {
 export const destroySession = async (userID: string) => {
   try {
     await client.del(userID);
-    console.log('client deleted');
     return true;
   } catch (err) {
-    console.log(err);
     return undefined;
   }
 };
 
 const addPlayerToGameList = async (gameID: string, userID: string) => {
   const savedList = await client.lPush(`${gameID}PlayerList`, userID);
-  // console.log(savedList);
+  return savedList;
 };
 
 export const addGameIDToSession = async (userID: string, gameID: string) => {
