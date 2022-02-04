@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
-import { instrument } from '@socket.io/admin-ui';
+// import { instrument } from '@socket.io/admin-ui';
 import serverPort, { clientURL } from './environment';
 import router from './router';
 import { addMiddleware } from './socket.io/middleware';
@@ -28,7 +28,7 @@ const io = new Server(server, {
     credentials: true,
   },
 });
-instrument(io, { auth: false });
+// instrument(io, { auth: false });
 // configure socket server
 addMiddleware(io);
 addServerListeners(io);
