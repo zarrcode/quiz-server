@@ -1,11 +1,13 @@
 import { type UserSocket } from '../interfaces';
-import { renderScoreboard, isGameOver } from '../../models/scoreboard';
+import { renderScoreboard, isGameOver, updateScoreboard } from '../../models/scoreboard';
 
 export default async function correctAnswersHandler(
   socket: UserSocket,
   gameID: string,
+  correctAnswers: string[],
 ) {
   try {
+    await updateScoreboard(gameID, correctAnswers);
     const scoreboard = await renderScoreboard(gameID);
     const isOver = await isGameOver(gameID);
     socket.emit('scoreboard', scoreboard, isOver);
