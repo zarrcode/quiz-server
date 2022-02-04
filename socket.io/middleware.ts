@@ -1,13 +1,13 @@
 /* eslint-disable no-param-reassign */
 import { Server } from 'socket.io';
 import { type UserSocket } from './interfaces';
-import sessionStore from './TEMP/sessionStoreTEMP';
+import { findSession, createSession } from '../models/users';
 
-function authenticateUser(socket: UserSocket, next: any) {
+async function authenticateUser(socket: UserSocket, next: any) {
   // handle reconnecting users
   const { sessionID } = socket.handshake.auth;
   if (sessionID) { // game ongoing
-    const session = sessionStore.findSession(sessionID);
+    const session = await findSession(sessionID);
     if (session) {
       socket.sessionID = sessionID;
       socket.username = session.username;
@@ -22,7 +22,8 @@ function authenticateUser(socket: UserSocket, next: any) {
     // create new session
     const { username } = socket.handshake.auth; // username only passed on first connection
     if (username) {
-      const sessionID = sessionStore.createSession(username);
+      const sessionID = await <Promise<string>>createSession(username);
+
       socket.sessionID = sessionID;
       socket.username = username;
       return next();

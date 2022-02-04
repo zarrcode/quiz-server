@@ -1,20 +1,20 @@
 import { type Server } from 'socket.io';
-import { type UserSocket } from '../interfaces';
-import { getGame, gameExists } from '../TEMP/gameStoreTEMP';
-import { addGameIDToSession, destroySession } from '../TEMP/sessionStoreTEMP';
+import { type UserSocket, type Game } from '../interfaces';
+// import { getGame, gameExists } from '../TEMP/gameStoreTEMP';
+import { addGameIDToSession, destroySession } from '../../models/users';
+import { quizExists as gameExists, getQuiz as getGame } from '../../models/quizzes';
 import { getGameRoomByID, getUsersInRoom } from './helperFunctions';
 
-function gameJoinHandler(io: Server, socket: UserSocket, gameID: string) {
-  console.log('howdy');
+async function gameJoinHandler(io: Server, socket: UserSocket, gameID: string) {
   try {
     if (!gameExists(gameID)) {
-      destroySession(socket.sessionID!); // TODO: replace with call to Angus function
+      await destroySession(socket.sessionID!);
       // emit custom 'error' to trigger disconnection on client
       const reason = 'game does not exist';
       socket.emit('disconnect_custom', reason);
     } else {
       // join user to game
-      addGameIDToSession(socket.sessionID!, gameID); // TODO: replace with call to Angus function
+      await addGameIDToSession(socket.sessionID!, gameID);
       socket.join(gameID);
 
       // send all users in room
@@ -23,8 +23,8 @@ function gameJoinHandler(io: Server, socket: UserSocket, gameID: string) {
       socket.emit('users', users);
 
       // send game name
-      const game = getGame(gameID);
-      socket.emit('game_joined', game!.title);
+      const game: Game = await <Promise<Game>>getGame(gameID);
+      socket.emit('game_joined', game.title);
 
       // alert other users
       const user = {
@@ -36,7 +36,7 @@ function gameJoinHandler(io: Server, socket: UserSocket, gameID: string) {
   } catch (err) {
     console.error(err);
 
-    destroySession(socket.sessionID!); // TODO: replace with call to Angus function
+    await destroySession(socket.sessionID!);
     // emit custom 'error' to trigger disconnection on client
     const reason = 'failed to join game';
     socket.emit('disconnect_custom', reason);

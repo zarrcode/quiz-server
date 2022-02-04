@@ -1,11 +1,11 @@
 import express, { Request, Response } from 'express';
-import cors from 'cors';
 import http from 'http';
+import cors from 'cors';
 import { Server } from 'socket.io';
 import serverPort, { clientURL } from './environment';
 import router from './router';
 import { addMiddleware } from './socket.io/middleware';
-import { addServerListeners } from './socket.io/serverListeners';
+import { connectionHandler } from './socket.io/connectionHandler';
 
 const app = express();
 const corsConfig = { origin: 'http://localhost:3000', credentials: true };
@@ -25,7 +25,7 @@ const io = new Server(server, {
 });
 // configure socket server
 addMiddleware(io);
-addServerListeners(io);
+io.on('connection', (socket) => connectionHandler(io, socket));
 
 // eslint-disable-next-line no-console
 server.listen(serverPort, () => {

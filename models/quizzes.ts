@@ -54,7 +54,7 @@ function formatQuestions(
   return formatted;
 }
 
-const generateQuiz = async (obj: any, hostID: string) => {
+export const generateQuiz = async (obj: any, hostID: string) => {
   try {
     const gameID = quizCodeGenerator();
     console.log('quizCode', gameID);
@@ -100,7 +100,7 @@ const generateQuiz = async (obj: any, hostID: string) => {
   }
 };
 
-const quizExists = async (gameID: string) => {
+export const quizExists = async (gameID: string) => {
   try {
     const quizExists = await client.hGetAll(gameID);
     console.log(quizExists);
@@ -111,7 +111,7 @@ const quizExists = async (gameID: string) => {
   }
 };
 
-const getQuiz = async (gameID: string) => {
+export const getQuiz = async (gameID: string) => {
   try {
     const quiz = await client.hGetAll(gameID);
     return quiz;

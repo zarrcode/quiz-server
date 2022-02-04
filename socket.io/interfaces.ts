@@ -6,7 +6,7 @@ export interface UserSocket extends Socket {
   gameID?: string,
 }
 
-export interface GameCreateOptions {
+export interface Game {
   username: string,
   title: string,
   difficulty: string,

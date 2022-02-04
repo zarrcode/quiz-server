@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { GameCreateOptions } from '../interfaces';
+import { type Game as GameOptions } from '../interfaces';
 
 export interface Game {
   gameID: string,
@@ -10,7 +10,7 @@ export interface Game {
 
 const gameStore: Game[] = [];
 
-export function createGame(hostID: string, options: GameCreateOptions) {
+export function createGame(hostID: string, options: GameOptions) {
   const gameID = 'Hello';
   const game = {
     gameID,

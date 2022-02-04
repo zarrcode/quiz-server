@@ -1,24 +1,22 @@
 import { type Server } from 'socket.io';
-import { type GameCreateOptions, type UserSocket } from '../interfaces';
-import { createGame } from '../TEMP/gameStoreTEMP';
-import { addGameIDToSession, destroySession } from '../TEMP/sessionStoreTEMP';
+import { type Game, type UserSocket } from '../interfaces';
 import { getGameRoomByID, getUsersInRoom } from './helperFunctions';
+import { generateQuiz as createGame } from '../../models/quizzes';
+import { addGameIDToSession, destroySession } from '../../models/users';
 
-async function gameCreateHandler(io: Server, socket: UserSocket, options: GameCreateOptions) {
+async function gameCreateHandler(io: Server, socket: UserSocket, options: Game) {
   try {
     // create game
     const hostID = socket.sessionID;
-    // TODO: replace with call to Angus function
-    const { gameID } = await createGame(hostID!, options);
+    const gameID = await <Promise<string>>createGame(options, hostID!);
 
     // join user to game
-    addGameIDToSession(socket.sessionID!, gameID); // TODO: replace with call to Angus function
+    await addGameIDToSession(socket.sessionID!, gameID);
     socket.join(gameID);
 
     // send all users in room
     const room = getGameRoomByID(io, gameID);
     const users = getUsersInRoom(io, room!);
-    console.log(users);
     socket.emit('users', users);
 
     // send game ID
@@ -26,7 +24,7 @@ async function gameCreateHandler(io: Server, socket: UserSocket, options: GameCr
   } catch (err) {
     console.error(err);
 
-    destroySession(socket.sessionID!); // TODO: replace with call to Angus function
+    await destroySession(socket.sessionID!);
     // emit custom 'error' to trigger disconnection on client
     const reason = 'failed to create game';
     socket.emit('disconnect_custom', reason);

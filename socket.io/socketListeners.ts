@@ -4,6 +4,7 @@ import gameCreateHandler from './gameHandlers/gameCreateHandler';
 import gameJoinHandler from './gameHandlers/gameJoinHandler';
 import getQuestionHandler from './gameHandlers/getQuestionHandler';
 import submitAnswerHandler from './gameHandlers/submitAnswerHandler';
+import { disconnectHandler } from './specialEventHandlers/disconnectHandler';
 
 export function addSocketListeners(io: Server, socket: UserSocket) {
   // for developement purposes
@@ -14,13 +15,8 @@ export function addSocketListeners(io: Server, socket: UserSocket) {
   socket.on('retrieve_question', (gameID) => getQuestionHandler(socket, gameID));
   socket.on('submit_answer', (gameID, answer, username) => submitAnswerHandler(socket, gameID, answer, username));
 
-  socket.on('disconnect', () => {
-    console.log(`${socket.username} disconnected`);
-
-    // update other users in room
-    const { sessionID } = socket;
-    socket.broadcast.emit('users_leave', sessionID);
-  });
+  // special events
+  socket.on('disconnect', () => disconnectHandler(socket));
 }
 
 export default { addSocketListeners };

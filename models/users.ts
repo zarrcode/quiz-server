@@ -3,7 +3,7 @@ import client from '../db';
 import { addPlayerToScoreboard } from './scoreboard';
 // import getQuestions from '../controllers/questions/index'
 
-const createSession = async (username: string) => {
+export const createSession = async (username: string) => {
   try {
     const userID = uuid();
     const values = { username };
@@ -16,17 +16,19 @@ const createSession = async (username: string) => {
   }
 };
 
-const findSession = async (userID: string) => {
+export const findSession = async (userID: string) => {
   try {
     const session = await client.hGetAll(userID);
-    return session;
+    if (session.username) {
+      return session;
+    }
   } catch (err) {
     console.log(err);
     return undefined;
   }
 };
 
-const destroySession = async (userID: string) => {
+export const destroySession = async (userID: string) => {
   try {
     await client.del(userID);
     console.log('client deleted');
@@ -42,7 +44,7 @@ const addPlayerToGameList = async (gameID: string, userID: string) => {
   // console.log(savedList);
 };
 
-const addGameIDToSession = async (userID: string, gameID: string) => {
+export const addGameIDToSession = async (userID: string, gameID: string) => {
   try {
     await client.hSet(userID, 'gameID', gameID);
     const user = await client.hGetAll(userID);
