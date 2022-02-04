@@ -10,7 +10,7 @@ export interface Game {
   username: string,
   title: string,
   difficulty: string,
-  category: string,
+  category: string[],
   type: string,
   questions: string,
 }

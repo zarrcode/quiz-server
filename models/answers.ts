@@ -43,6 +43,7 @@ export const evaluateAnswer = async (
     if (similarity > 0.656) updateScoreboard(gameID, username);
     addToAnswerList(gameID, username, answer, correctAnswer, similarity);
     const current = await client.hIncrBy(gameID, 'Submitted_Answers', 1);
+    console.log(current, Number(quiz.Active_Players));
     if (current >= Number(quiz.Active_Players)) return true;
     return false;
   } catch (err) {

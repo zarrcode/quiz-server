@@ -57,8 +57,8 @@ function formatQuestions(
 export const generateQuiz = async (obj: any, hostID: string) => {
   try {
     const gameID = quizCodeGenerator();
-    console.log('quizCode', gameID);
-    console.log('format', obj.Format);
+    // console.log('quizCode', gameID);
+    // console.log('format', obj.Format);
 
     const token = await getToken();
 
@@ -66,12 +66,12 @@ export const generateQuiz = async (obj: any, hostID: string) => {
       const questions: string[] | undefined = await getQuestions(
         obj.questions,
         token,
-        obj.category,
+        obj.categories,
         obj.difficulty,
         obj.type,
       );
       console.log(questions);
-      const formattedQuestions = formatQuestions(questions, obj.Format);
+      const formattedQuestions = formatQuestions(questions, obj.type);
       console.log('formattedQuestions', formattedQuestions)
 
       // const hostID = await registerHost(obj.username, quizCode);
