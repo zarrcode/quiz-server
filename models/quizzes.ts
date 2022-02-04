@@ -120,7 +120,7 @@ const getQuiz = async (gameID: string) => {
   }
 };
 
-const getCurrentQuestion = async (gameID: string) => {
+export const getCurrentQuestion = async (gameID: string) => {
   try {
     const quiz = await client.hGetAll(gameID);
     const format = quiz.Format;

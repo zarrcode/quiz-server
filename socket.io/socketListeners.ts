@@ -11,7 +11,7 @@ export function addSocketListeners(io: Server, socket: UserSocket) {
 
   socket.on('game_create', (options) => gameCreateHandler(io, socket, options));
   socket.on('game_join', (gameID) => gameJoinHandler(io, socket, gameID));
-  socket.on('retrieve_question', (gameID) => getQuestionHandler(socket, gameID)); // TODO: write handler
+  socket.on('retrieve_question', (gameID) => getQuestionHandler(socket, gameID));
   socket.on('submit_answer', (gameID, answer, username) => submitAnswerHandler(socket, gameID, answer, username));
 
   socket.on('disconnect', () => {

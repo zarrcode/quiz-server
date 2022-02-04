@@ -8,9 +8,9 @@ export default async function getQuestionHandler(
   username: string,
 ) {
   try {
-    await evaluateAnswer(gameID, username, answer);
+    const isAllAnswered = await evaluateAnswer(gameID, username, answer);
     const answerList = await getAnswersAndBoolean(gameID);
-    socket.emit('answer_list', answerList);
+    socket.emit('answer_list', answerList, isAllAnswered);
   } catch (err) {
     console.error(err);
     // emit custom 'error'
