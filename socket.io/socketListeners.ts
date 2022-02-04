@@ -16,7 +16,10 @@ export function addSocketListeners(io: Server, socket: UserSocket) {
 
   socket.on('disconnect', () => {
     console.log(`${socket.username} disconnected`);
-    // TODO: emit to all connected rooms that user disconnected, passing identifier
+
+    // update other users in room
+    const { sessionID } = socket;
+    socket.broadcast.emit('users_leave', sessionID);
   });
 }
 

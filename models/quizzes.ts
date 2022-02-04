@@ -145,5 +145,8 @@ const getCurrentQuestion = async (gameID: string) => {
     return error;
   }
 };
-// getCurrentQuestion('GIBM');
+
+console.log(quizExists('GIBM'));
 console.log(getCurrentQuestion('GIBM'));
+
+export default { getCurrentQuestion };

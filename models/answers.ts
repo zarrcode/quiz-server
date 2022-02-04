@@ -17,7 +17,7 @@ const addToAnswerList = async (
   }
 };
 
-const getAnswersAndBoolean = async (gameID:string) => {
+export const getAnswersAndBoolean = async (gameID:string) => {
   const answerList = await client.hGetAll(`${gameID}AnswerList`);
   if (answerList) {
     const arr: { [x: string]: string; }[] = [];
@@ -29,7 +29,7 @@ const getAnswersAndBoolean = async (gameID:string) => {
   }
 };
 
-const evaluateAnswer = async (
+export const evaluateAnswer = async (
   gameID: string,
   username: string,
   answer: string,

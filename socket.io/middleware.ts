@@ -6,7 +6,7 @@ import sessionStore from './TEMP/sessionStoreTEMP';
 function authenticateUser(socket: UserSocket, next: any) {
   // handle reconnecting users
   const { sessionID } = socket.handshake.auth;
-  if (sessionID) {
+  if (sessionID) { // game ongoing
     const session = sessionStore.findSession(sessionID);
     if (session) {
       socket.sessionID = sessionID;
@@ -16,18 +16,23 @@ function authenticateUser(socket: UserSocket, next: any) {
     }
   }
 
-  // handle first time connection
-  const { username } = socket.handshake.auth; // username only passed on first connection
-  if (username) {
+  // handle manual connection
+  const hasUsername = Object.prototype.hasOwnProperty.call(socket.handshake.auth, 'username');
+  if (hasUsername) {
     // create new session
-    const sessionID = sessionStore.createSession(username);
-    socket.sessionID = sessionID;
-    socket.username = username;
-    return next();
+    const { username } = socket.handshake.auth; // username only passed on first connection
+    if (username) {
+      const sessionID = sessionStore.createSession(username);
+      socket.sessionID = sessionID;
+      socket.username = username;
+      return next();
+    }
+
+    return next(new Error('username invalid'));
   }
 
-  // refuse users with falsy usernames and users attempting to reconnect to closed lobbies
-  return next(new Error());
+  // refuse users with deleted sessions
+  return next(new Error('session deleted'));
 }
 
 export function addMiddleware(io: Server) {
