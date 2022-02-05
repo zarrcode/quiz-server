@@ -43,7 +43,6 @@ export const addGameIDToSession = async (userID: string, gameID: string) => {
   try {
     await client.hSet(userID, 'gameID', gameID);
     const user = await client.hGetAll(userID);
-    console.log('user', user);
     addPlayerToGameList(gameID, userID);
     addPlayerToScoreboard(gameID, user.username);
     await client.hIncrBy(gameID, 'Active_Players', 1);
