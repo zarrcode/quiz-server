@@ -15,7 +15,7 @@ export default function initListeners(io: Server) {
     connectionHandler(io, socket);
     gameCreateHandler(io, socket);
     gameJoinHandler(io, socket);
-    getQuestionHandler(socket);
+    getQuestionHandler(io, socket);
     submitAnswerHandler(socket);
     correctAnswersHandler(socket);
     gameEndHandler(io, socket);
