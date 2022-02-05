@@ -19,6 +19,7 @@ interface Score { [key: string]: string }
 
 export const renderScoreboard = async (gameID:string) => {
   try {
+    await client.hSet(gameID, 'Gamestate', 'scoreboard');
     await client.hIncrBy(gameID, 'Current_Question', 1);
     await client.hSet(gameID, 'Submitted_Answers', 0);
     const scoreboard = await client.hGetAll(`${gameID}Scoreboard`);
@@ -43,7 +44,10 @@ export const renderScoreboard = async (gameID:string) => {
 
 export const isGameOver = async (gameID: string) => {
   const quiz = await client.hGetAll(gameID);
-  if (quiz.Current_Question === quiz.No_Questions) return true;
+  if (quiz.Current_Question === quiz.No_Questions) {
+    await client.hSet(gameID, 'Gamestate', 'final');
+    return true;
+  }
   return false;
 };
 
