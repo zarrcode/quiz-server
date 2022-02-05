@@ -2,6 +2,7 @@ import { type Server } from 'socket.io';
 import { type UserSocket } from '../interfaces';
 import { generateQuiz as createGame } from '../../models/quizzes';
 import { addGameIDToSession, destroySession } from '../../models/users';
+import { setGameTimeout } from '../helperFunctions';
 import usersEvent from '../events/usersEvent';
 import gameCreatedEvent from '../events/gameCreatedEvent';
 import disconnectCustomEvent from '../events/disconnectCustomEvent';
@@ -12,6 +13,9 @@ export default function gameCreateHandler(io: Server, socket: UserSocket) {
       // create game
       const hostID = socket.sessionID;
       const gameID = await <Promise<string>>createGame(options, hostID!);
+
+      // set timeout
+      setGameTimeout(io, gameID);
 
       // join user to game
       await addGameIDToSession(socket.sessionID!, gameID);

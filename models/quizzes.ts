@@ -27,8 +27,8 @@ export const pushTime = async (gameID: string) => {
 };
 
 export const getTime = async (gameID: string) => {
-  const registeredTime = await client.hGet(gameID, 'Timestamp');
-  return registeredTime;
+  const registeredTime = await <Promise<string>>client.hGet(gameID, 'Timestamp');
+  return parseInt(registeredTime, 10);
 };
 
 function formatQuestions(
