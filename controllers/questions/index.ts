@@ -69,7 +69,7 @@ export default async function getQuestions(
 ): Promise<string [] | undefined> {
   try {
     if (difficulty && !(['easy', 'medium', 'hard']).includes(difficulty)) throw new Error();
-    if (type && type !== 'multiple') throw new Error();
+    if (type && type !== 'multiple') type = undefined;
     if (!Array.isArray(category)) throw new Error();
     let categoryAmount;
     if (category.length) categoryAmount = Math.floor(amount / category.length);
