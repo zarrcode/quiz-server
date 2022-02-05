@@ -117,6 +117,7 @@ export const quizExists = async (gameID: string) => {
 export const getQuiz = async (gameID: string) => {
   try {
     const quiz = await client.hGetAll(gameID);
+    console.log(quiz)
     return quiz;
   } catch (err) {
     return err;
@@ -169,4 +170,4 @@ export const destroyQuiz = async (gameID: string) => {
 export default { getCurrentQuestion };
 
 pushTime('HUNH')
-quizExists('HUNH');
+console.log(getQuiz('HUNH'));

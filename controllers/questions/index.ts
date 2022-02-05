@@ -67,7 +67,6 @@ export default async function getQuestions(
   difficulty?: string,
   type?: string,
 ): Promise<string [] | undefined> {
-  console.log('hitting api request function')
   try {
     if (difficulty && !(['easy', 'medium', 'hard']).includes(difficulty)) throw new Error();
     if (type && type !== 'multiple') type = undefined;
@@ -107,8 +106,6 @@ export default async function getQuestions(
         }
       }
     }
-    console.log('hitting end of api request function')
-
     return questionArray;
   } catch (error) {
     // eslint-disable-next-line no-console

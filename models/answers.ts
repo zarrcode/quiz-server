@@ -18,13 +18,18 @@ const addToAnswerList = async (
 };
 
 export const getAnswersAndBoolean = async (gameID:string) => {
-  const answerList = await client.hGetAll(`${gameID}AnswerList`);
-  if (answerList) {
-    const arr: { [x: string]: string; }[] = [];
-    Object.keys(answerList).forEach((el) => {
-      arr.push({ username: el, answer: answerList[el].split(':')[0], result: answerList[el].split(':')[1] });
-    });
-    return arr;
+  try {
+    const answerList = await client.hGetAll(`${gameID}AnswerList`);
+    if (answerList) {
+      const arr: { [x: string]: string; }[] = [];
+      Object.keys(answerList).forEach((el) => {
+        arr.push({ username: el, answer: answerList[el].split(':')[0], result: answerList[el].split(':')[1] });
+      });
+      return arr;
+    }
+    return undefined;
+  } catch (err) {
+    return err;
   }
 };
 
@@ -34,15 +39,18 @@ export const evaluateAnswer = async (
   answer: string,
 ) => {
   try {
+    await client.hSet(gameID, 'Gamestate', 'answers');
     const quiz = await client.hGetAll(gameID);
     const currentQuestionNumber = quiz.Current_Question;
-    const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
+    const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
+      .replace(/&rsquo;/g, "'")
+      .replace(/&amp;/g, '&');
     // eslint-disable-next-line max-len
     const similarity = stringSimilarity.compareTwoStrings(correctAnswer.toLowerCase(), answer.toLowerCase());
     // if (similarity > 0.656) updateScoreboard(gameID, username);
     addToAnswerList(gameID, username, answer, correctAnswer, similarity);
     const current = await client.hIncrBy(gameID, 'Submitted_Answers', 1);
-    if (current >= Number(quiz.Active_Players)) return true;
+    if (current >= Number(quiz.Active_Players)) { return true; }
     return false;
   } catch (err) {
     return err;
