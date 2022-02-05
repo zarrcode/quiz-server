@@ -56,6 +56,7 @@ function formatQuestions(
 }
 
 export const generateQuiz = async (obj: any, hostID: string) => {
+  console.log(obj);
   try {
     const gameID = quizCodeGenerator();
 
@@ -116,14 +117,19 @@ export const getCurrentQuestion = async (gameID: string) => {
     const quiz = await client.hGetAll(gameID);
     const format = quiz.Format;
     const currentQuestionNumber = quiz.Current_Question;
-    const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"');
-    const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"');
+    const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
+      .replace(/&rsquo;/g, "'");
+    const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
+      .replace(/&rsquo;/g, "'");
     if (currentQuestion && format !== 'multiple') {
       return { currentQuestion, correctAnswer };
     }
-    const incorrectAnswer1 = quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"');
-    const incorrectAnswer2 = quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"');
-    const incorrectAnswer3 = quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"');
+    const incorrectAnswer1 = quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
+      .replace(/&rsquo;/g, "'");
+    const incorrectAnswer2 = quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
+      .replace(/&rsquo;/g, "'");
+    const incorrectAnswer3 = quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
+      .replace(/&rsquo;/g, "'");
     // eslint-disable-next-line max-len
     return {
       currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3,
@@ -150,4 +156,4 @@ export const destroyQuiz = async (gameID: string) => {
 
 export default { getCurrentQuestion };
 
-generateQuiz(newQuiz,'angeloo');
+// generateQuiz(newQuiz,'angeloo');
