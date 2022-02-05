@@ -2,7 +2,10 @@ import { type Server } from 'socket.io';
 import { type UserSocket, type Game } from '../interfaces';
 import { addGameIDToSession, destroySession } from '../../models/users';
 import { quizExists as gameExists, getQuiz as getGame } from '../../models/quizzes';
-import { getUsersInGame } from '../helperFunctions';
+import disconnectCustomEvent from '../events/disconnectCustomEvent';
+import usersEvent from '../events/usersEvent';
+import gameJoinedEvent from '../events/gameJoinedEvent';
+import usersJoinEvent from '../events/usersJoinEvent';
 
 export default function gameJoinHandler(io: Server, socket: UserSocket) {
   socket.on('game_join', async (gameID) => {
@@ -11,34 +14,30 @@ export default function gameJoinHandler(io: Server, socket: UserSocket) {
         await destroySession(socket.sessionID!);
         // emit custom 'error' to trigger disconnection on client
         const reason = 'game does not exist';
-        socket.emit('disconnect_custom', reason);
+        disconnectCustomEvent(socket, reason);
       } else {
         // join user to game
         await addGameIDToSession(socket.sessionID!, gameID);
         socket.join(gameID);
 
         // send all users in room
-        const users = getUsersInGame(io, gameID);
-        socket.emit('users', users);
+        usersEvent(io, socket, gameID);
 
         // send game name
-        const game: Game = await <Promise<Game>>getGame(gameID);
-        socket.emit('game_joined', game.title);
+        const game = await <Promise<Game>>getGame(gameID);
+        gameJoinedEvent(socket, game.title);
 
         // alert other users
-        const user = {
-          sessionID: socket.sessionID,
-          username: socket.username,
-        };
-        socket.to(gameID).emit('users_join', user);
+        usersJoinEvent(socket, gameID);
       }
     } catch (err) {
       console.error(err);
 
       await destroySession(socket.sessionID!);
+
       // emit custom 'error' to trigger disconnection on client
       const reason = 'failed to join game';
-      socket.emit('disconnect_custom', reason);
+      disconnectCustomEvent(socket, reason);
     }
   });
 }

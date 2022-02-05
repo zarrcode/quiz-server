@@ -17,6 +17,6 @@ export default function initListeners(io: Server) {
     getQuestionHandler(socket);
     submitAnswerHandler(socket);
     correctAnswersHandler(socket);
-    disconnectHandler(io, socket);
+    disconnectHandler(socket);
   });
 }

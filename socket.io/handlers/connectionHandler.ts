@@ -1,24 +1,19 @@
-import { Server } from 'socket.io';
-import { getUsersInGame } from '../helperFunctions';
+import { type Server } from 'socket.io';
 import { type UserSocket } from '../interfaces';
-import { getQuiz as getGameData } from '../../models/quizzes';
+import sessionEvent from '../events/sessionEvent';
+import usersEvent from '../events/usersEvent';
+import gameDataEvent from '../events/gameDataEvent';
 
 export default async function connectionHandler(io: Server, socket: UserSocket) {
   console.log(`${socket.username} connected`);
 
-  // send session for storing in client local storage
-  socket.emit('session', socket.sessionID);
+  sessionEvent(socket);
 
   const { gameID } = socket;
-
-  if (!gameID) return; // if no game ID, user is connecting for the first time
-
-  // rejoin reconnecting users to ongoing games
-  const users = getUsersInGame(io, gameID);
-  socket.emit('users', users);
-
-  socket.join(gameID);
-
-  const gameData = await getGameData(gameID);
-  socket.emit('game_data', gameData);
+  if (gameID) {
+    // rejoin reconnecting users to ongoing games
+    usersEvent(io, socket, gameID);
+    socket.join(gameID);
+    gameDataEvent(socket, gameID);
+  }
 }
