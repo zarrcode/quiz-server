@@ -6,6 +6,7 @@ import gameJoinHandler from './gameJoinHandler';
 import getQuestionHandler from './getQuestionHandler';
 import submitAnswerHandler from './submitAnswerHandler';
 import correctAnswersHandler from './correctAnswersHandler';
+import gameEndHandler from './gameEndHandler';
 import disconnectHandler from './disconnectHandler';
 
 export default function initListeners(io: Server) {
@@ -17,6 +18,7 @@ export default function initListeners(io: Server) {
     getQuestionHandler(socket);
     submitAnswerHandler(socket);
     correctAnswersHandler(socket);
+    gameEndHandler(io, socket);
     disconnectHandler(socket);
   });
 }

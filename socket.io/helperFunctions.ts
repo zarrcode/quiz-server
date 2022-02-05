@@ -7,12 +7,17 @@ export function getGameRoomByID(io: Server, gameID: string) {
   return room;
 }
 
-export function getUsersInRoom(io: Server, room: Set<string>) {
+export function getSocketsInRoom(io: Server, room: Set<string>) {
   const sockets: UserSocket[] = [];
   room.forEach((socketID) => {
     const socket = <UserSocket>io.sockets.sockets.get(socketID);
     sockets.push(socket);
   });
+  return sockets;
+}
+
+export function getUsersInRoom(io: Server, room: Set<string>) {
+  const sockets = getSocketsInRoom(io, room);
   const users = sockets.map((socket) => ({
     sessionID: socket.sessionID,
     username: socket.username,
@@ -28,6 +33,7 @@ export function getUsersInGame(io: Server, gameID: string) {
 
 export default {
   getGameRoomByID,
+  getSocketsInRoom,
   getUsersInRoom,
   getUsersInGame,
 };
