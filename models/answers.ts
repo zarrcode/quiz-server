@@ -24,7 +24,6 @@ export const getAnswersAndBoolean = async (gameID:string) => {
     Object.keys(answerList).forEach((el) => {
       arr.push({ username: el, answer: answerList[el].split(':')[0], result: answerList[el].split(':')[1] });
     });
-    console.log('answer list', arr);
     return arr;
   }
 };
@@ -40,10 +39,9 @@ export const evaluateAnswer = async (
     const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-');
     // eslint-disable-next-line max-len
     const similarity = stringSimilarity.compareTwoStrings(correctAnswer.toLowerCase(), answer.toLowerCase());
-    if (similarity > 0.656) updateScoreboard(gameID, username);
+    // if (similarity > 0.656) updateScoreboard(gameID, username);
     addToAnswerList(gameID, username, answer, correctAnswer, similarity);
     const current = await client.hIncrBy(gameID, 'Submitted_Answers', 1);
-    console.log(current, Number(quiz.Active_Players));
     if (current >= Number(quiz.Active_Players)) return true;
     return false;
   } catch (err) {
