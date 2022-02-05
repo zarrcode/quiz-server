@@ -8,7 +8,7 @@ export default function finalCorrectAnswersHandler(io: Server, socket: UserSocke
       const room = getGameRoomByID(io, gameID);
       if (room) {
         const sockets = getSocketsInRoom(io, room);
-        sockets.forEach((socket) => socket.emit('corrected_answers', correctAnswers));
+        sockets.forEach((socket) => socket.emit('toggle_answers', correctAnswers));
       }
     } catch (err) {
       console.error(err);
