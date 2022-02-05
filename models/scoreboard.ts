@@ -42,7 +42,6 @@ export const renderScoreboard = async (gameID:string) => {
 };
 
 export const isGameOver = async (gameID: string) => {
-  await client.hIncrBy(gameID, 'Current_Question', 1);
   const quiz = await client.hGetAll(gameID);
   if (quiz.Current_Question === quiz.No_Questions) return true;
   return false;
