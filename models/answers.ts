@@ -18,13 +18,18 @@ const addToAnswerList = async (
 };
 
 export const getAnswersAndBoolean = async (gameID:string) => {
-  const answerList = await client.hGetAll(`${gameID}AnswerList`);
-  if (answerList) {
-    const arr: { [x: string]: string; }[] = [];
-    Object.keys(answerList).forEach((el) => {
-      arr.push({ username: el, answer: answerList[el].split(':')[0], result: answerList[el].split(':')[1] });
-    });
-    return arr;
+  try {
+    const answerList = await client.hGetAll(`${gameID}AnswerList`);
+    if (answerList) {
+      const arr: { [x: string]: string; }[] = [];
+      Object.keys(answerList).forEach((el) => {
+        arr.push({ username: el, answer: answerList[el].split(':')[0], result: answerList[el].split(':')[1] });
+      });
+      return arr;
+    }
+    return undefined;
+  } catch (err) {
+    return err;
   }
 };
 
