@@ -27,7 +27,6 @@ function formatQuestions(
 ) {
   const formatted = [];
   if (type === 'multiple' && array) {
-    // console.log('hitting correctly')
     let question = 1;
     for (let i = 0; i < array.length; i += 5) {
       formatted.push(`Question${question}[question]`);
@@ -56,7 +55,6 @@ function formatQuestions(
 }
 
 export const generateQuiz = async (obj: any, hostID: string) => {
-  console.log(obj);
   try {
     const gameID = quizCodeGenerator();
 
