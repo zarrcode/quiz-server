@@ -91,7 +91,7 @@ export const generateQuiz = async (obj: any, hostID: string) => {
         'Submitted_Answers', 0,
         'No_Questions', obj.questions,
         'Current_Question', 1,
-        'RenderedScreen', 'Lobby',
+        'Gamestate', 'lobby',
         'Timestamp', Date.now(),
         ...formattedQuestions,
       ];
@@ -106,7 +106,7 @@ export const generateQuiz = async (obj: any, hostID: string) => {
 export const quizExists = async (gameID: string) => {
   try {
     const quizExists = await client.hGetAll(gameID);
-    console.log(quizExists);
+    console.log(quizExists.Format);
     if (quizExists) return true;
     return false;
   } catch (err) {
@@ -117,7 +117,6 @@ export const quizExists = async (gameID: string) => {
 export const getQuiz = async (gameID: string) => {
   try {
     const quiz = await client.hGetAll(gameID);
-    console.log(quiz)
     return quiz;
   } catch (err) {
     return err;
@@ -126,22 +125,28 @@ export const getQuiz = async (gameID: string) => {
 
 export const getCurrentQuestion = async (gameID: string) => {
   try {
+    await client.hSet(gameID, 'Gamestate', 'question');
     const quiz = await client.hGetAll(gameID);
     const format = quiz.Format;
     const currentQuestionNumber = quiz.Current_Question;
     const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'");
+      .replace(/&rsquo;/g, "'")
+      .replace(/&amp;/g, '&');
     const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'");
+      .replace(/&rsquo;/g, "'")
+      .replace(/&amp;/g, '&');
     if (currentQuestion && format !== 'multiple') {
       return { currentQuestion, correctAnswer };
     }
     const incorrectAnswer1 = quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'");
+      .replace(/&rsquo;/g, "'")
+      .replace(/&amp;/g, '&');
     const incorrectAnswer2 = quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'");
+      .replace(/&rsquo;/g, "'")
+      .replace(/&amp;/g, '&');
     const incorrectAnswer3 = quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'");
+      .replace(/&rsquo;/g, "'")
+      .replace(/&amp;/g, '&');
     // eslint-disable-next-line max-len
     console.log('incorrectAnswer3', incorrectAnswer3)
     return {
@@ -149,6 +154,18 @@ export const getCurrentQuestion = async (gameID: string) => {
     };
   } catch (error) {
     return error;
+  }
+};
+
+export const reconnectState = async (gameID: string) => {
+  try {
+    const quiz = await client.hGetAll(gameID);
+    const currentQuestion = await getCurrentQuestion(gameID);
+    console.log(currentQuestion, quiz);
+    if (quiz && currentQuestion) return ({ quiz, currentQuestion });
+    // if (quiz && currentQuestion) return ({ quiz, currentQuestion });
+  } catch (err) {
+    return err;
   }
 };
 
@@ -167,7 +184,7 @@ export const destroyQuiz = async (gameID: string) => {
   }
 };
 
-export default { getCurrentQuestion };
+// export default { getCurrentQuestion };
 
-pushTime('HUNH')
-console.log(getQuiz('HUNH'));
+// // pushTime('HUNH')
+// console.log(reconnectState('KVEM'));
