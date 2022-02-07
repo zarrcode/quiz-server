@@ -12,8 +12,6 @@ export default function getQuestionHandler(io: Server, socket: UserSocket) {
   socket.on('retrieve_question', async (gameID) => {
     try {
       const questionAndAnswers = await <Promise<QuestionAndAnswers>> getCurrentQuestion(gameID);
-      const isAllAnswered = await haveAllAnswered(gameID);
-      console.log('isAllAnswered', isAllAnswered);
       let seconds = parseInt(questionAndAnswers.timer, 10);
       const room = getGameRoomByID(io, gameID);
       if (room) {
@@ -27,6 +25,7 @@ export default function getQuestionHandler(io: Server, socket: UserSocket) {
             sockets.forEach((socket) => {
               socket.emit('timer', seconds);
             });
+            const isAllAnswered = await haveAllAnswered(gameID);
             if (seconds < 1 || isAllAnswered) {
               clearInterval(timer);
               sockets.forEach((socket) => socket.emit('timeout'));
