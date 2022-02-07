@@ -14,18 +14,20 @@ export default function getQuestionHandler(io: Server, socket: UserSocket) {
         const sockets = getSocketsInRoom(io, room);
         sockets.forEach((socket) => {
           socket.emit('new_question', questionAndAnswers);
-          if (seconds) {
-            const timer = setInterval(async () => {
-              seconds -= 1;
-              socket.emit('timer', seconds);
-              if (seconds < 1) {
-                clearInterval(timer);
-                const answerList = await getAnswersAndBoolean(gameID);
-                socket.emit('answerList', answerList, true);
-              }
-            }, 1000);
-          }
         });
+        if (seconds) {
+          const timer = setInterval(async () => {
+            seconds -= 1;
+            sockets.forEach((socket) => {
+              socket.emit('timer', seconds);
+            });
+            if (seconds < 1) {
+              clearInterval(timer);
+              const answerList = await getAnswersAndBoolean(gameID);
+              sockets.forEach((socket) => socket.emit('answer_list', answerList, true));
+            }
+          }, 1000);
+        }
       }
     } catch (err) {
       console.error(err);
