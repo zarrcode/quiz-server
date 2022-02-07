@@ -1,7 +1,7 @@
 import { type Server } from 'socket.io';
 import { type UserSocket } from '../interfaces';
 import { getCurrentQuestion } from '../../models/quizzes';
-import { getAnswersAndBoolean, haveAllAnswered } from '../../models/answers';
+import { haveAllAnswered } from '../../models/answers';
 import { getGameRoomByID, getSocketsInRoom } from '../helperFunctions';
 
 export default function getQuestionHandler(io: Server, socket: UserSocket) {
@@ -24,8 +24,7 @@ export default function getQuestionHandler(io: Server, socket: UserSocket) {
             });
             if (seconds < 1 || isAllAnswered) {
               clearInterval(timer);
-              const answerList = await getAnswersAndBoolean(gameID);
-              sockets.forEach((socket) => socket.emit('answer_list', answerList, 'timeout'));
+              sockets.forEach((socket) => socket.emit('timeout'));
             }
           }, 1000);
         }
