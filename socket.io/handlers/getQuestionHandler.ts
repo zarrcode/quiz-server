@@ -18,7 +18,7 @@ export default function getQuestionHandler(io: Server, socket: UserSocket) {
             const timer = setInterval(async () => {
               seconds -= 1;
               socket.emit('timer', seconds);
-              if (seconds === 0) {
+              if (seconds < 1) {
                 clearInterval(timer);
                 const answerList = await getAnswersAndBoolean(gameID);
                 socket.emit('answerList', answerList, true);
