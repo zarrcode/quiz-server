@@ -15,7 +15,7 @@ export default function finalCorrectAnswersHandler(io: Server, socket: UserSocke
       const room = getGameRoomByID(io, gameID);
       if (room) {
         const sockets = getSocketsInRoom(io, room);
-        if (gameOver) sockets.forEach((socket) => socket.emit('final_scoreboard'), scoreboard);
+        if (gameOver) sockets.forEach((socket) => socket.emit('final_scoreboard', scoreboard));
         else sockets.forEach((socket) => socket.emit('scoreboard', scoreboard));
       }
     } catch (err) {
