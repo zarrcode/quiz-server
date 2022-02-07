@@ -1,3 +1,4 @@
+import { decode } from 'html-entities';
 import client from '../db';
 import getQuestions from '../controllers/questions/index';
 import getToken from '../controllers/token/index';
@@ -137,20 +138,17 @@ export const getCurrentQuestion = async (gameID: string) => {
     const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
       .replace(/&rsquo;/g, "'")
       .replace(/&amp;/g, '&');
+    const currentQuestion = decode(quiz[`Question${currentQuestionNumber}[question]`]);
+    const correctAnswer = decode(quiz[`Question${currentQuestionNumber}[answer]`]);
     if (currentQuestion && format !== 'multiple') {
       return { currentQuestion, correctAnswer };
     }
-    const incorrectAnswer1 = quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'")
-      .replace(/&amp;/g, '&');
-    const incorrectAnswer2 = quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'")
-      .replace(/&amp;/g, '&');
-    const incorrectAnswer3 = quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'")
-      .replace(/&amp;/g, '&');
+    const incorrectAnswer1 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`]);
+    const incorrectAnswer2 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`]);
+    const incorrectAnswer3 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`]);
     // eslint-disable-next-line max-len
     console.log('incorrectAnswer3', incorrectAnswer3);
+    // console.log('incorrectAnswer3', incorrectAnswer3);
     return {
       currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3, timer,
     };
@@ -165,6 +163,7 @@ export const reconnectState = async (gameID: string) => {
     const currentQuestion = await getCurrentQuestion(gameID);
     console.log(currentQuestion, quiz);
     if (quiz && currentQuestion) return ({ quiz, currentQuestion });
+    return undefined;
     // if (quiz && currentQuestion) return ({ quiz, currentQuestion });
   } catch (err) {
     return err;
