@@ -15,6 +15,7 @@ export default function gameJoinHandler(io: Server, socket: UserSocket) {
       setGameTimeout(io, gameID);
 
       const gameExists = await checkGameExists(gameID);
+
       if (!gameExists) {
         await destroySession(socket.sessionID!);
         // emit custom 'error' to trigger disconnection on client
