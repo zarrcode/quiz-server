@@ -14,3 +14,26 @@ export interface Game {
   type: string,
   questions: string,
 }
+
+export interface GameMetadata {
+  Title: string,
+  Gamestate: string,
+  Assigned_Host: string,
+  Format: string,
+  No_Questions: string,
+  Current_Question: string,
+}
+
+export interface CurrentQuestion {
+  currentQuestion: string,
+  correctAnswer: string,
+  incorrectAnswer1?: string,
+  incorrectAnswer2?: string,
+  incorrectAnswer3?: string,
+}
+
+export interface PlayerAnswer {
+  username: string,
+  answer: string,
+  result: string,
+}

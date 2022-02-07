@@ -12,8 +12,8 @@ export default async function connectionHandler(io: Server, socket: UserSocket) 
   const { gameID } = socket;
   if (gameID) {
     // rejoin reconnecting users to ongoing games
-    usersEvent(io, socket, gameID);
     socket.join(gameID);
+    usersEvent(io, socket, gameID);
     gameDataEvent(socket, gameID);
   }
 }

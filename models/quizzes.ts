@@ -28,8 +28,8 @@ export const pushTime = async (gameID: string) => {
 };
 
 export const getTime = async (gameID: string) => {
-  const registeredTime = await client.hGet(gameID, 'Timestamp');
-  return registeredTime;
+  const registeredTime = await <Promise<string>>client.hGet(gameID, 'Timestamp');
+  return parseInt(registeredTime, 10);
 };
 
 function formatQuestions(
@@ -108,7 +108,7 @@ export const quizExists = async (gameID: string) => {
   try {
     const quizExists = await client.hGetAll(gameID);
     console.log(quizExists.Format);
-    if (quizExists) return true;
+    if (quizExists.Title) return true;
     return false;
   } catch (err) {
     return err;

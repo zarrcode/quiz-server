@@ -1,6 +1,10 @@
 import { type UserSocket } from '../interfaces';
 
 export default function sessionEvent(socket: UserSocket) {
-  const { sessionID } = socket;
-  socket.emit('session', sessionID);
+  const session = {
+    sessionID: socket.sessionID,
+    username: socket.username,
+    gameID: socket.gameID,
+  };
+  socket.emit('session', session);
 }
