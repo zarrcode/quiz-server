@@ -9,7 +9,7 @@ export default function getQuestionHandler(io: Server, socket: UserSocket) {
     try {
       const questionAndAnswers = await getCurrentQuestion(gameID);
       const isAllAnswered = await haveAllAnswered(gameID);
-      let seconds = 30; // await ANGUSTIMERGET
+      let seconds = 30;
       const room = getGameRoomByID(io, gameID);
       if (room) {
         const sockets = getSocketsInRoom(io, room);
@@ -25,7 +25,7 @@ export default function getQuestionHandler(io: Server, socket: UserSocket) {
             if (seconds < 1 || isAllAnswered) {
               clearInterval(timer);
               const answerList = await getAnswersAndBoolean(gameID);
-              sockets.forEach((socket) => socket.emit('answer_list', answerList, true));
+              sockets.forEach((socket) => socket.emit('answer_list', answerList, 'timeout'));
             }
           }, 1000);
         }
