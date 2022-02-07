@@ -68,7 +68,6 @@ function formatQuestions(
 export const generateQuiz = async (obj: any, hostID: string) => {
   try {
     const gameID = quizCodeGenerator();
-    console.log(gameID)
 
     const token = await getToken();
 
@@ -132,12 +131,6 @@ export const getCurrentQuestion = async (gameID: string) => {
     const format = quiz.Format;
     const currentQuestionNumber = quiz.Current_Question;
     const timer = quiz.Timer;
-    const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'")
-      .replace(/&amp;/g, '&');
-    const correctAnswer = quiz[`Question${currentQuestionNumber}[answer]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
-      .replace(/&rsquo;/g, "'")
-      .replace(/&amp;/g, '&');
     const currentQuestion = decode(quiz[`Question${currentQuestionNumber}[question]`]);
     const correctAnswer = decode(quiz[`Question${currentQuestionNumber}[answer]`]);
     if (currentQuestion && format !== 'multiple') {
