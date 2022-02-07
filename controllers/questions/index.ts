@@ -38,7 +38,7 @@ async function getCategory(
 
     if (type && type === 'multiple') {
       results.every((el: Questions) => {
-        if (el.question.includes('Which of') || el.question.includes('Which one')) return true;
+        if (el.question.includes('Which of') || el.question.includes('Which one') || el.question.includes('What is not')) return true;
         resultsArray.push(el.question);
         resultsArray.push(el.correct_answer);
         resultsArray.push(...el.incorrect_answers);
