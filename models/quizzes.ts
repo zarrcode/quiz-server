@@ -107,7 +107,7 @@ export const quizExists = async (gameID: string) => {
   try {
     const quizExists = await client.hGetAll(gameID);
     console.log(quizExists.Format);
-    if (quizExists) return true;
+    if (quizExists.Title) return true;
     return false;
   } catch (err) {
     return err;

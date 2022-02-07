@@ -16,8 +16,22 @@ export interface Game {
 }
 
 export interface GameData {
-  inGame: boolean,
-  gameID: string,
-  gameTitle: string,
-  gameState: string,
+  Title: string,
+  Gamestate: string,
+  Assigned_Host: string,
+  Format: string,
+}
+
+export interface CurrentQuestion {
+  currentQuestion: string,
+  correctAnswer: string,
+  incorrectAnswer1?: string,
+  incorrectAnswer2?: string,
+  incorrectAnswer3?: string,
+}
+
+export interface PlayerAnswer {
+  username: string,
+  answer: string,
+  result: string,
 }
