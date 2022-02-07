@@ -6,7 +6,7 @@ import {
 } from '../interfaces';
 import {
   getQuiz as getGameData,
-  getCurrentQuestion,
+  getCurrentQuestionOnReconnect as getCurrentQuestion,
 } from '../../models/quizzes';
 import {
   getAnswersAndBoolean as getPlayerAnswers,

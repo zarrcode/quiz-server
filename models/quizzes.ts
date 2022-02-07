@@ -121,12 +121,37 @@ export const getQuiz = async (gameID: string) => {
     return quiz;
   } catch (err) {
     return err;
-  } 
+  }
 };
 
 export const getCurrentQuestion = async (gameID: string) => {
   try {
     await client.hSet(gameID, 'Gamestate', 'question');
+    const quiz = await client.hGetAll(gameID);
+    const format = quiz.Format;
+    const currentQuestionNumber = quiz.Current_Question;
+    const timer = quiz.Timer;
+    const currentQuestion = decode(quiz[`Question${currentQuestionNumber}[question]`]);
+    const correctAnswer = decode(quiz[`Question${currentQuestionNumber}[answer]`]);
+    if (currentQuestion && format !== 'multiple') {
+      return { currentQuestion, correctAnswer };
+    }
+    const incorrectAnswer1 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`]);
+    const incorrectAnswer2 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`]);
+    const incorrectAnswer3 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`]);
+    // eslint-disable-next-line max-len
+    console.log('incorrectAnswer3', incorrectAnswer3);
+    // console.log('incorrectAnswer3', incorrectAnswer3);
+    return {
+      currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3, timer,
+    };
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getCurrentQuestionOnReconnect = async (gameID: string) => {
+  try {
     const quiz = await client.hGetAll(gameID);
     const format = quiz.Format;
     const currentQuestionNumber = quiz.Current_Question;

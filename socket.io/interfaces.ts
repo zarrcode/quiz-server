@@ -1,5 +1,11 @@
 import { type Socket } from 'socket.io';
 
+export interface User {
+  sessionID?: string,
+  username?: string,
+  gameID?: string,
+}
+
 export interface UserSocket extends Socket {
   sessionID?: string,
   username?: string,
