@@ -1,6 +1,6 @@
+import { decode } from 'html-entities';
 import client from '../db';
 import { updateScoreboard } from './scoreboard';
-import { decode } from 'html-entities';
 
 const stringSimilarity = require('string-similarity');
 
@@ -46,7 +46,6 @@ export const evaluateAnswer = async (
     const correctAnswer = decode(quiz[`Question${currentQuestionNumber}[answer]`]);
     // eslint-disable-next-line max-len
     const similarity = stringSimilarity.compareTwoStrings(correctAnswer.toLowerCase(), answer.toLowerCase());
-    // if (similarity > 0.656) updateScoreboard(gameID, username);
     addToAnswerList(gameID, username, answer, correctAnswer, similarity);
     const current = await client.hIncrBy(gameID, 'Submitted_Answers', 1);
     if (current >= Number(quiz.Active_Players)) { return true; }
@@ -56,10 +55,22 @@ export const evaluateAnswer = async (
   }
 };
 
+export const haveAllAnswered = async (gameID: string) => {
+  try {
+    const quiz = await client.hGetAll(gameID);
+    const answered = quiz.Submitted_Answers;
+    const activePlayers = quiz.Active_Players;
+    if (answered >= activePlayers) return true;
+    return false;
+  } catch (err) {
+    return err;
+  }
+};
+
 // evaluateAnswer('GIBM', 'oscar', '21st August');
 // evaluateAnswer('GIBM', 'angus', '29st September');
 // evaluateAnswer('GIBM', 'David', 'August 21');
-getAnswersAndBoolean('GIBM');
+// getAnswersAndBoolean('GIBM');
 
 // const similarity1 = stringSimilarity.compareTwoStrings('princess leia', 'leia');
 
