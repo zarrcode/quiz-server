@@ -1,13 +1,14 @@
 import { type Server } from 'socket.io';
 import { type UserSocket } from '../interfaces';
 import { getCurrentQuestion } from '../../models/quizzes';
-import { getAnswersAndBoolean } from '../../models/answers';
+import { getAnswersAndBoolean, haveAllAnswered } from '../../models/answers';
 import { getGameRoomByID, getSocketsInRoom } from '../helperFunctions';
 
 export default function getQuestionHandler(io: Server, socket: UserSocket) {
   socket.on('retrieve_question', async (gameID) => {
     try {
       const questionAndAnswers = await getCurrentQuestion(gameID);
+      const isAllAnswered = await haveAllAnswered(gameID);
       let seconds = 30; // await ANGUSTIMERGET
       const room = getGameRoomByID(io, gameID);
       if (room) {
@@ -21,7 +22,7 @@ export default function getQuestionHandler(io: Server, socket: UserSocket) {
             sockets.forEach((socket) => {
               socket.emit('timer', seconds);
             });
-            if (seconds < 1) {
+            if (seconds < 1 || isAllAnswered) {
               clearInterval(timer);
               const answerList = await getAnswersAndBoolean(gameID);
               sockets.forEach((socket) => socket.emit('answer_list', answerList, true));
