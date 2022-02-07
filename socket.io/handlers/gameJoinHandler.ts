@@ -24,6 +24,7 @@ export default function gameJoinHandler(io: Server, socket: UserSocket) {
       } else {
         // join user to game
         await addGameIDToSession(socket.sessionID!, gameID);
+        socket.gameID = gameID;
         socket.join(gameID);
 
         // send all users in room

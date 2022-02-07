@@ -19,6 +19,7 @@ export default function gameCreateHandler(io: Server, socket: UserSocket) {
 
       // join user to game
       await addGameIDToSession(socket.sessionID!, gameID);
+      socket.gameID = gameID;
       socket.join(gameID);
 
       // send all users in room

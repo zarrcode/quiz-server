@@ -23,6 +23,6 @@ export default function initListeners(io: Server) {
     correctAnswersHandler(io, socket);
     finalScoreboardHandler(io, socket);
     gameEndHandler(io, socket);
-    disconnectHandler(socket);
+    disconnectHandler(io, socket);
   });
 }

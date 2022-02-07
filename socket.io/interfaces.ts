@@ -43,3 +43,8 @@ export interface PlayerAnswer {
   answer: string,
   result: string,
 }
+
+export interface PlayerScore {
+  username: string,
+  score: string,
+}

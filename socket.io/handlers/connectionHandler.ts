@@ -4,6 +4,7 @@ import sessionEvent from '../events/sessionEvent';
 import usersEvent from '../events/usersEvent';
 import gameDataEvent from '../events/gameDataEvent';
 import userDataEvent from '../events/userDataEvent';
+import usersJoinEvent from '../events/usersJoinEvent';
 
 export default async function connectionHandler(io: Server, socket: UserSocket) {
   console.log(`${socket.username} connected`);
@@ -17,5 +18,6 @@ export default async function connectionHandler(io: Server, socket: UserSocket) 
     userDataEvent(socket);
     usersEvent(io, socket, gameID);
     gameDataEvent(socket, gameID);
+    usersJoinEvent(socket, gameID);
   }
 }
