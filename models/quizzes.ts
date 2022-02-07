@@ -122,7 +122,7 @@ export const getQuiz = async (gameID: string) => {
     return quiz;
   } catch (err) {
     return err;
-  }
+  } 
 };
 
 export const getCurrentQuestion = async (gameID: string) => {

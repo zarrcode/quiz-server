@@ -9,6 +9,7 @@ import correctAnswersHandler from './finalCorrectAnswersHandler';
 import updateCorrectAnswersHandler from './updateCorrectAnswersHandler';
 import gameEndHandler from './gameEndHandler';
 import disconnectHandler from './disconnectHandler';
+import finalScoreboardHandler from './finalScoreboardHandler';
 
 export default function initListeners(io: Server) {
   io.on('connection', (socket) => {
@@ -20,6 +21,7 @@ export default function initListeners(io: Server) {
     submitAnswerHandler(io, socket);
     updateCorrectAnswersHandler(io, socket);
     correctAnswersHandler(io, socket);
+    finalScoreboardHandler(io, socket);
     gameEndHandler(io, socket);
     disconnectHandler(socket);
   });
