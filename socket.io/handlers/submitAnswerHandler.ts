@@ -17,7 +17,7 @@ export default function submitAnswerHandler(io: Server, socket: UserSocket) {
       console.error(err);
       // emit custom 'error'
       const reason = 'failed to submit answer';
-      socket.emit('answer_error', reason);
+      socket.emit('submit_answer_error', reason);
     }
   });
 }

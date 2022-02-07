@@ -17,8 +17,8 @@ export default function finalCorrectAnswersHandler(io: Server, socket: UserSocke
     } catch (err) {
       console.error(err);
       // emit custom 'error'
-      const reason = 'failed to submit correct answer';
-      socket.emit('answer_error', reason);
+      const reason = 'failed to finalise correct answers';
+      socket.emit('scoreboard_error', reason);
     }
   });
 }

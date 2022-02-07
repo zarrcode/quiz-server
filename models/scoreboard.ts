@@ -44,7 +44,7 @@ export const renderScoreboard = async (gameID:string) => {
 
 export const isGameOver = async (gameID: string) => {
   const quiz = await client.hGetAll(gameID);
-  if (quiz.Current_Question === quiz.No_Questions) {
+  if (quiz.Current_Question > quiz.No_Questions) {
     await client.hSet(gameID, 'Gamestate', 'final');
     return true;
   }
