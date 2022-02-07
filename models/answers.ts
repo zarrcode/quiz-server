@@ -60,7 +60,9 @@ export const haveAllAnswered = async (gameID: string) => {
     const quiz = await client.hGetAll(gameID);
     const answered = quiz.Submitted_Answers;
     const activePlayers = quiz.Active_Players;
-    if (answered >= activePlayers) return true;
+    // console.log('answered', Number(answered));
+    // console.log('activePlaters', Number(activePlayers));
+    if (Number(answered) >= Number(activePlayers)) return true;
     return false;
   } catch (err) {
     return err;
@@ -71,6 +73,7 @@ export const haveAllAnswered = async (gameID: string) => {
 // evaluateAnswer('GIBM', 'angus', '29st September');
 // evaluateAnswer('GIBM', 'David', 'August 21');
 // getAnswersAndBoolean('GIBM');
+// console.log(haveAllAnswered('CKSS'));
 
 // const similarity1 = stringSimilarity.compareTwoStrings('princess leia', 'leia');
 
