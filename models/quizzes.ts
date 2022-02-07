@@ -134,7 +134,7 @@ export const getCurrentQuestion = async (gameID: string) => {
     const currentQuestion = decode(quiz[`Question${currentQuestionNumber}[question]`]);
     const correctAnswer = decode(quiz[`Question${currentQuestionNumber}[answer]`]);
     if (currentQuestion && format !== 'multiple') {
-      return { currentQuestion, correctAnswer };
+      return { currentQuestion, correctAnswer, timer };
     }
     const incorrectAnswer1 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`]);
     const incorrectAnswer2 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`]);
