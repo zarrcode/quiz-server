@@ -68,7 +68,6 @@ function formatQuestions(
 export const generateQuiz = async (obj: any, hostID: string) => {
   try {
     const gameID = quizCodeGenerator();
-
     const token = await getToken();
 
     if (token) {
@@ -134,14 +133,11 @@ export const getCurrentQuestion = async (gameID: string) => {
     const currentQuestion = decode(quiz[`Question${currentQuestionNumber}[question]`]);
     const correctAnswer = decode(quiz[`Question${currentQuestionNumber}[answer]`]);
     if (currentQuestion && format !== 'multiple') {
-      return { currentQuestion, correctAnswer };
+      return { currentQuestion, correctAnswer, timer };
     }
     const incorrectAnswer1 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer1]`]);
     const incorrectAnswer2 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer2]`]);
     const incorrectAnswer3 = decode(quiz[`Question${currentQuestionNumber}[incorrectAnswer3]`]);
-    // eslint-disable-next-line max-len
-    console.log('incorrectAnswer3', incorrectAnswer3);
-    // console.log('incorrectAnswer3', incorrectAnswer3);
     return {
       currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3, timer,
     };
@@ -182,7 +178,6 @@ export const reconnectState = async (gameID: string) => {
     console.log(currentQuestion, quiz);
     if (quiz && currentQuestion) return ({ quiz, currentQuestion });
     return undefined;
-    // if (quiz && currentQuestion) return ({ quiz, currentQuestion });
   } catch (err) {
     return err;
   }
@@ -202,8 +197,3 @@ export const destroyQuiz = async (gameID: string) => {
     return error;
   }
 };
-
-// export default { getCurrentQuestion };
-
-// // pushTime('HUNH')
-// console.log(reconnectState('KVEM'));
