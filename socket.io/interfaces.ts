@@ -15,11 +15,13 @@ export interface Game {
   questions: string,
 }
 
-export interface GameData {
+export interface GameMetadata {
   Title: string,
   Gamestate: string,
   Assigned_Host: string,
   Format: string,
+  No_Questions: string,
+  Current_Question: string,
 }
 
 export interface CurrentQuestion {
