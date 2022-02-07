@@ -4,7 +4,7 @@ import { isGameOver } from '../../models/scoreboard';
 import { getGameRoomByID, getSocketsInRoom } from '../helperFunctions';
 
 export default function finalScoreboardHandler(io: Server, socket: UserSocket) {
-  socket.on('retrieve_question', async (gameID) => {
+  socket.on('final_scoreboard', async (gameID) => {
     try {
       const room = getGameRoomByID(io, gameID);
       const isOver = await isGameOver(gameID);
