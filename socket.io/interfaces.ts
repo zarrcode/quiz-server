@@ -14,3 +14,10 @@ export interface Game {
   type: string,
   questions: string,
 }
+
+export interface GameData {
+  inGame: boolean,
+  gameID: string,
+  gameTitle: string,
+  gameState: string,
+}
