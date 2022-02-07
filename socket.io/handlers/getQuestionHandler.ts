@@ -9,7 +9,7 @@ export default function getQuestionHandler(io: Server, socket: UserSocket) {
     try {
       const questionAndAnswers = await getCurrentQuestion(gameID);
       const isAllAnswered = await haveAllAnswered(gameID);
-      console.log(isAllAnswered);
+      console.log('isAllAnswered', isAllAnswered);
       let seconds = 10;
       const room = getGameRoomByID(io, gameID);
       if (room) {

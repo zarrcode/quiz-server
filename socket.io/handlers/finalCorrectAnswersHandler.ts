@@ -1,6 +1,6 @@
 import { type Server } from 'socket.io';
 import { type UserSocket } from '../interfaces';
-import { renderScoreboard, isGameOver, updateScoreboard } from '../../models/scoreboard';
+import { renderScoreboard, updateScoreboard } from '../../models/scoreboard';
 import { getGameRoomByID, getSocketsInRoom } from '../helperFunctions';
 
 export default function finalCorrectAnswersHandler(io: Server, socket: UserSocket) {
@@ -8,11 +8,10 @@ export default function finalCorrectAnswersHandler(io: Server, socket: UserSocke
     try {
       await updateScoreboard(gameID, correctAnswers);
       const scoreboard = await renderScoreboard(gameID);
-      const isOver = await isGameOver(gameID);
       const room = getGameRoomByID(io, gameID);
       if (room) {
         const sockets = getSocketsInRoom(io, room);
-        sockets.forEach((socket) => socket.emit('scoreboard', scoreboard, isOver));
+        sockets.forEach((socket) => socket.emit('scoreboard', scoreboard));
       }
     } catch (err) {
       console.error(err);
