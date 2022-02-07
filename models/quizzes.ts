@@ -93,6 +93,7 @@ export const generateQuiz = async (obj: any, hostID: string) => {
         'Current_Question', 1,
         'Gamestate', 'lobby',
         'Timestamp', Date.now(),
+        'Timer', obj.timer,
         ...formattedQuestions,
       ];
       await client.hSet(gameID, quizArr);
@@ -129,6 +130,7 @@ export const getCurrentQuestion = async (gameID: string) => {
     const quiz = await client.hGetAll(gameID);
     const format = quiz.Format;
     const currentQuestionNumber = quiz.Current_Question;
+    const timer = quiz.Timer;
     const currentQuestion = quiz[`Question${currentQuestionNumber}[question]`].replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&shy;/g, '-').replace(/&[rl]dquo;/g, '"')
       .replace(/&rsquo;/g, "'")
       .replace(/&amp;/g, '&');
@@ -148,9 +150,9 @@ export const getCurrentQuestion = async (gameID: string) => {
       .replace(/&rsquo;/g, "'")
       .replace(/&amp;/g, '&');
     // eslint-disable-next-line max-len
-    console.log('incorrectAnswer3', incorrectAnswer3)
+    console.log('incorrectAnswer3', incorrectAnswer3);
     return {
-      currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3,
+      currentQuestion, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3, timer,
     };
   } catch (error) {
     return error;
