@@ -1,12 +1,24 @@
 import client from '../db';
 
+interface Score { [key: string]: string }
+
 export const addPlayerToScoreboard = async (gameID: string, username: string) => {
   await client.hSet(`${gameID}Scoreboard`, username, 0);
   const scoreboard = await client.hGetAll(`${gameID}Scoreboard`);
   return scoreboard;
 };
 
-// need to be prepared if this gets passed as an array
+export const updateScoreState = async (gameID: string) => {
+  try {
+    await client.hSet(gameID, 'Gamestate', 'scoreboard');
+    await client.hIncrBy(gameID, 'Current_Question', 1);
+    await client.hSet(gameID, 'Submitted_Answers', 0);
+    return null;
+  } catch (err) {
+    return err;
+  }
+};
+
 export const updateScoreboard = async (gameID:string, username: string | string[]) => {
   if (Array.isArray(username)) {
     username.map((el) => client.hIncrBy(`${gameID}Scoreboard`, el, 1));
@@ -15,13 +27,11 @@ export const updateScoreboard = async (gameID:string, username: string | string[
   }
 };
 
-interface Score { [key: string]: string }
-
 export const renderScoreboard = async (gameID:string) => {
   try {
-    await client.hSet(gameID, 'Gamestate', 'scoreboard');
-    await client.hIncrBy(gameID, 'Current_Question', 1);
-    await client.hSet(gameID, 'Submitted_Answers', 0);
+    // await client.hSet(gameID, 'Gamestate', 'scoreboard');
+    // await client.hIncrBy(gameID, 'Current_Question', 1);
+    // await client.hSet(gameID, 'Submitted_Answers', 0);
     const scoreboard = await client.hGetAll(`${gameID}Scoreboard`);
     if (scoreboard) {
       const orderedScoreboard: any = [];
