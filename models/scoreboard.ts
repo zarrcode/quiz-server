@@ -20,10 +20,14 @@ export const updateScoreState = async (gameID: string) => {
 };
 
 export const updateScoreboard = async (gameID:string, username: string | string[]) => {
-  if (Array.isArray(username)) {
-    username.map((el) => client.hIncrBy(`${gameID}Scoreboard`, el, 1));
-  } else {
-    client.hIncrBy(`${gameID}Scoreboard`, username, 1);
+  try {
+    if (Array.isArray(username)) {
+      username.map((el) => client.hIncrBy(`${gameID}Scoreboard`, el, 1));
+    } else {
+      client.hIncrBy(`${gameID}Scoreboard`, username, 1);
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -53,12 +57,16 @@ export const renderScoreboard = async (gameID:string) => {
 };
 
 export const isGameOver = async (gameID: string) => {
-  const quiz = await client.hGetAll(gameID);
-  if (quiz.Current_Question > quiz.No_Questions) {
-    await client.hSet(gameID, 'Gamestate', 'final');
-    return true;
+  try {
+    const quiz = await client.hGetAll(gameID);
+    if (quiz.Current_Question > quiz.No_Questions) {
+      await client.hSet(gameID, 'Gamestate', 'final');
+      return true;
+    }
+    return false;
+  } catch (err) {
+    return err;
   }
-  return false;
 };
 
 export default { addPlayerToScoreboard, updateScoreboard, renderScoreboard };

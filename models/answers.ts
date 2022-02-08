@@ -11,10 +11,14 @@ const addToAnswerList = async (
   correctAnswer: string,
   similarity: number,
 ) => {
-  if (similarity > 0.656) {
-    await client.hSet(`${gameID}AnswerList`, username, `${answer}:true`);
-  } else {
-    await client.hSet(`${gameID}AnswerList`, username, `${answer}:false`);
+  try {
+    if (similarity > 0.656) {
+      await client.hSet(`${gameID}AnswerList`, username, `${answer}:true`);
+    } else {
+      await client.hSet(`${gameID}AnswerList`, username, `${answer}:false`);
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 

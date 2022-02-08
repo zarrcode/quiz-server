@@ -35,8 +35,12 @@ export const destroySession = async (userID: string) => {
 };
 
 const addPlayerToGameList = async (gameID: string, userID: string) => {
-  const savedList = await client.lPush(`${gameID}PlayerList`, userID);
-  return savedList;
+  try {
+    const savedList = await client.lPush(`${gameID}PlayerList`, userID);
+    return savedList;
+  } catch (err) {
+    return err;
+  }
 };
 
 export const addGameIDToSession = async (userID: string, gameID: string) => {

@@ -23,13 +23,21 @@ function quizCodeGenerator() {
 }
 
 export const pushTime = async (gameID: string) => {
-  const timeNow = Date.now();
-  await client.hSet(gameID, 'Timestamp', timeNow);
+  try {
+    const timeNow = Date.now();
+    await client.hSet(gameID, 'Timestamp', timeNow);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const getTime = async (gameID: string) => {
-  const registeredTime = await <Promise<string>>client.hGet(gameID, 'Timestamp');
-  return parseInt(registeredTime, 10);
+  try {
+    const registeredTime = await <Promise<string>>client.hGet(gameID, 'Timestamp');
+    return parseInt(registeredTime, 10);
+  } catch (err) {
+    return err;
+  }
 };
 
 function formatQuestions(
