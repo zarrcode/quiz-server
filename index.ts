@@ -6,7 +6,7 @@ import router from './router';
 import initSocketIO from './socket.io';
 
 const app = express();
-const corsConfig = { origin: 'http://localhost:3000', credentials: true };
+const corsConfig = { origin: 'https://next-quiz.herokuapp.com/', credentials: true };
 
 app
   .use(cors(corsConfig))
