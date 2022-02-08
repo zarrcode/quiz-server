@@ -20,6 +20,6 @@ const server = http.createServer(app);
 
 initSocketIO(server);
 
-server.listen(serverPort, () => {
+server.listen(process.env.PORT, () => {
   console.log(`Server running at http://localhost:${serverPort}`);
 });
