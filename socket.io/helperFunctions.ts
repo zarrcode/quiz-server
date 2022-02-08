@@ -49,7 +49,7 @@ export async function setGameTimeout(io: Server, gameID: string) {
   await setLastUpdated(gameID);
 
   const endGameConditionally = async () => {
-    const lastUpdated = await getLastUpdated(gameID);
+    const lastUpdated = await <Promise<number>>getLastUpdated(gameID);
     const now = Date.now();
     const timeElapsed = now - lastUpdated;
     if (timeElapsed > allowedInterval) {
