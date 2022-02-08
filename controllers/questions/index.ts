@@ -68,6 +68,7 @@ export default async function getQuestions(
   type?: string,
 ): Promise<string [] | undefined> {
   try {
+    let isQustionsExhausted = false;
     if (difficulty && !(['easy', 'medium', 'hard']).includes(difficulty)) throw new Error();
     if (type && type !== 'multiple') type = undefined;
     if (!Array.isArray(category)) throw new Error();
@@ -78,8 +79,8 @@ export default async function getQuestions(
       return resultsArray;
     }
     const questionArray: string[] = [];
-    for (let i = 0; i < category.length; i += 1) {
-      while (categoryAmount > 0) {
+    for (let i = 0; i < category.length && !isQustionsExhausted; i += 1) {
+      while (categoryAmount > 0 && !isQustionsExhausted) {
         // eslint-disable-next-line no-await-in-loop
         const resultsArray = await getCategory(
           categoryAmount,
@@ -88,7 +89,8 @@ export default async function getQuestions(
           difficulty,
           type,
         );
-        if (resultsArray) categoryAmount -= resultsArray.length;
+        if (resultsArray && resultsArray.length) categoryAmount -= resultsArray.length;
+        else isQustionsExhausted = true;
         questionArray.push(...resultsArray!);
       }
       categoryAmount = Math.floor(amount / category.length);
@@ -98,14 +100,19 @@ export default async function getQuestions(
     else amountModifier = 2;
     while (questionArray.length < amount * amountModifier) {
       for (let i = 0; i < category.length; i += 1) {
+        let questionCategory;
+        if (isQustionsExhausted) questionCategory = undefined;
+        else questionCategory = category[i];
         // eslint-disable-next-line no-await-in-loop
-        const resultsArray = await getCategory(1, token, category[i], difficulty, type);
+        const resultsArray = await getCategory(1, token, questionCategory, difficulty, type);
         if (resultsArray && resultsArray.length) {
           questionArray.push(...resultsArray);
           if (questionArray.length === amount * amountModifier) break;
         }
       }
     }
+    console.log(questionArray);
+    console.log(questionArray.length);
     return questionArray;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -113,3 +120,5 @@ export default async function getQuestions(
     return undefined;
   }
 }
+
+getQuestions(40, '07506753ae5ec7e9fcbe90608e529f38c2e9d1ee1eb572a252c84a867da29e92', ['Anime'], 'easy', 'multiple');
