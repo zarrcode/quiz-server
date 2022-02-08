@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .js --ignore-path .gitignore .",
-    "start": "nodemon index.ts "
+    "start": "ts-node index.ts "
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "redis": "^4.0.3",
     "socket.io": "^4.4.1",
     "string-similarity": "^4.0.4",
+    "ts-node": "^10.5.0",
     "uuid": "^8.3.2"
   },
   "config": {
