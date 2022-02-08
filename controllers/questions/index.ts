@@ -111,8 +111,6 @@ export default async function getQuestions(
         }
       }
     }
-    console.log(questionArray);
-    console.log(questionArray.length);
     return questionArray;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -120,5 +118,3 @@ export default async function getQuestions(
     return undefined;
   }
 }
-
-getQuestions(40, '07506753ae5ec7e9fcbe90608e529f38c2e9d1ee1eb572a252c84a867da29e92', ['Anime'], 'easy', 'multiple');
