@@ -1,5 +1,5 @@
 import { type Server } from 'socket.io';
-import { type UserSocket, type Game } from '../interfaces';
+import { type UserSocket, type GameMetadata } from '../interfaces';
 import { setGameTimeout } from '../helperFunctions';
 import { addGameIDToSession, destroySession } from '../../models/users';
 import { quizExists as checkGameExists, getQuiz as getGame } from '../../models/quizzes';
@@ -31,8 +31,8 @@ export default function gameJoinHandler(io: Server, socket: UserSocket) {
         usersEvent(io, socket, gameID);
 
         // send game name
-        const game = await <Promise<Game>>getGame(gameID);
-        gameJoinedEvent(socket, game.title);
+        const game = await <Promise<GameMetadata>>getGame(gameID);
+        gameJoinedEvent(socket, game.Title);
 
         // alert other users
         usersJoinEvent(socket, gameID);
