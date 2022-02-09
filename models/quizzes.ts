@@ -125,6 +125,7 @@ export const getQuiz = async (gameID: string) => {
 
 export const getCurrentQuestion = async (gameID: string) => {
   try {
+    await client.del(`${gameID}AnswerList`);
     await client.hSet(gameID, 'Gamestate', 'question');
     const quiz = await client.hGetAll(gameID);
     const format = quiz.Format;
